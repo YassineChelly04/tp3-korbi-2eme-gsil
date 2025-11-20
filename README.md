@@ -163,6 +163,9 @@ Référence: REF004, Nom: Fromage, Prix unitaire: 2,00 €, Quantité en stock: 
 **Yassine Chelly**
 - GitHub: [@YassineChelly04](https://github.com/YassineChelly04)
 
+  
+**Fares Falleh**
+
 ## 📄 Licence
 
 Ce projet est un travail pratique académique (2ème année GSIL).
