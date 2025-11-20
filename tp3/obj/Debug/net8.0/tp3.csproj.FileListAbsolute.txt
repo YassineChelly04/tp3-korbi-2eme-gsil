@@ -1,0 +1,14 @@
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\bin\Debug\net8.0\tp3.exe
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\bin\Debug\net8.0\tp3.deps.json
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\bin\Debug\net8.0\tp3.runtimeconfig.json
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\bin\Debug\net8.0\tp3.dll
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\bin\Debug\net8.0\tp3.pdb
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\obj\Debug\net8.0\tp3.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\obj\Debug\net8.0\tp3.AssemblyInfoInputs.cache
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\obj\Debug\net8.0\tp3.AssemblyInfo.cs
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\obj\Debug\net8.0\tp3.csproj.CoreCompileInputs.cache
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\obj\Debug\net8.0\tp3.dll
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\obj\Debug\net8.0\refint\tp3.dll
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\obj\Debug\net8.0\tp3.pdb
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\obj\Debug\net8.0\tp3.genruntimeconfig.cache
+C:\Users\yassi\OneDrive\Desktop\TP C#\seance 20-11\tp3\tp3\obj\Debug\net8.0\ref\tp3.dll
