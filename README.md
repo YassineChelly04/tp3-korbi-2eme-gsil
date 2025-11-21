@@ -1,6 +1,6 @@
 # 🛒 TP3 - Système de Gestion de Stock
 
-Un système de gestion de produits développé en C# (.NET 8) avec support des produits standards et produits frais périssables.
+Un système de gestion de produits développé en C#  avec support des produits standards et produits frais périssables.
 
 ## 📋 Description
 
@@ -11,7 +11,6 @@ Ce projet implémente un système de gestion de stock qui permet de gérer deux 
 ## 🚀 Technologies
 
 - **Langage** : C# 12.0
-- **Framework** : .NET 8.0
 - **Type de projet** : Application Console
 
 ## 📁 Structure du Projet
