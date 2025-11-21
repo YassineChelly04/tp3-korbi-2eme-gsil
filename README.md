@@ -91,25 +91,14 @@ Console.WriteLine(produit);
 // Output: Référence: REF001, Nom: Lait, Prix unitaire: 1,20 €, Quantité en stock: 55
 ```
 
-## 🧪 Programme de Test
-
-Le fichier `Program.cs` contient un programme de démonstration qui :
-
-1. ✅ Crée une liste de 4 produits (2 standards + 2 frais)
-2. ✅ Affiche la liste initiale
-3. ✅ Ajoute 10 unités au produit "REF001"
-4. ✅ Retire 10 unités au produit "REF002"
-5. ✅ Affiche les produits avec quantité nulle
-6. ✅ Affiche les produits frais périmés
-
 ## 🎯 Fonctionnalités
 
-- ✅ Gestion du stock avec ajout/retrait de quantités
-- ✅ Protection contre les stocks négatifs
-- ✅ Calcul automatique des jours restants avant péremption
-- ✅ Détection des produits périmés
-- ✅ Filtrage des produits par quantité
-- ✅ Héritage et polymorphisme orienté objet
+-  Gestion du stock avec ajout/retrait de quantités
+-  Protection contre les stocks négatifs
+-  Calcul automatique des jours restants avant péremption
+-  Détection des produits périmés
+-  Filtrage des produits par quantité
+-  Héritage et polymorphisme orienté objet
 
 ## 🔧 Installation et Exécution
 
@@ -167,7 +156,7 @@ Référence: REF004, Nom: Fromage, Prix unitaire: 2,00 €, Quantité en stock: 
 
 ## 📄 Licence
 
-Ce projet est un travail pratique académique (2ème année GSIL).
+Ce projet est un tp académique (2ème année GSIL) et toutes la promotion de GSIL de l'année 2025-2026.
 
 ## 🤝 Contribution
 
