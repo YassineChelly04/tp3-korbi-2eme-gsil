@@ -11,6 +11,12 @@ async function initDb() {
   if (db) return;
   db = new Database(getDbPath());
 
+  // Performance pragmas
+  db.pragma('journal_mode = WAL');
+  db.pragma('mmap_size = 268435456');
+  db.pragma('synchronous = NORMAL');
+  db.pragma('cache_size = -64000');
+
   // Core notes table
   db.exec(`
     CREATE TABLE IF NOT EXISTS notes (
@@ -86,6 +92,14 @@ async function initDb() {
     END;
   `);
 
+  // Performance indexes
+  db.exec(`
+    CREATE INDEX IF NOT EXISTS idx_notes_folder_id ON notes(folder_id);
+    CREATE INDEX IF NOT EXISTS idx_notes_is_pinned ON notes(is_pinned);
+    CREATE INDEX IF NOT EXISTS idx_notes_updated_at ON notes(updated_at);
+    CREATE INDEX IF NOT EXISTS idx_note_tags_tag_id ON note_tags(tag_id);
+  `);
+
   // Migration: add missing columns to existing DB without error
   const notesCols = db.pragma("table_info(notes)").map((c) => c.name);
   if (!notesCols.includes("is_pinned")) {
@@ -102,6 +116,15 @@ async function initDb() {
   }
   if (!notesCols.includes("color_tag")) {
     db.exec("ALTER TABLE notes ADD COLUMN color_tag TEXT;");
+  }
+
+  // Migration: add parent_id and sort_order to folders for nested hierarchy
+  const folderCols = db.pragma("table_info(folders)").map((c) => c.name);
+  if (!folderCols.includes("parent_id")) {
+    db.exec("ALTER TABLE folders ADD COLUMN parent_id INTEGER REFERENCES folders(id) ON DELETE SET NULL;");
+  }
+  if (!folderCols.includes("sort_order")) {
+    db.exec("ALTER TABLE folders ADD COLUMN sort_order INTEGER DEFAULT 0;");
   }
 }
 
@@ -169,19 +192,42 @@ function deleteNote(id) {
 // ── Folders ────────────────────────────────────────────────────────
 
 function listFolders() {
-  return db.prepare("SELECT * FROM folders ORDER BY name ASC").all();
+  return db.prepare("SELECT * FROM folders ORDER BY sort_order ASC, name ASC").all();
 }
 
-function createFolder(name) {
-  const info = db.prepare("INSERT INTO folders (name) VALUES (?)").run(name);
-  return { id: info.lastInsertRowid, name, color: "#6366f1" };
+function createFolder(name, parentId = null) {
+  const info = db.prepare("INSERT INTO folders (name, parent_id) VALUES (?, ?)").run(name, parentId);
+  return { id: info.lastInsertRowid, name, color: "#6366f1", parent_id: parentId, sort_order: 0 };
 }
 
 function renameFolder(id, name) {
   db.prepare("UPDATE folders SET name = ? WHERE id = ?").run(name, id);
 }
 
+function updateFolderColor(id, color) {
+  db.prepare("UPDATE folders SET color = ? WHERE id = ?").run(color, id);
+}
+
+function updateFolderParent(id, parentId) {
+  db.prepare("UPDATE folders SET parent_id = ? WHERE id = ?").run(parentId, id);
+}
+
+function moveNoteToFolder(noteId, folderId) {
+  db.prepare("UPDATE notes SET folder_id = ? WHERE id = ?").run(folderId, noteId);
+}
+
+function getNoteCountsByFolder() {
+  return db.prepare(
+    "SELECT folder_id, COUNT(*) as count FROM notes WHERE is_deleted = 0 AND folder_id IS NOT NULL GROUP BY folder_id"
+  ).all();
+}
+
 function deleteFolder(id) {
+  // Reparent children to this folder's parent before deleting
+  const folder = db.prepare("SELECT parent_id FROM folders WHERE id = ?").get(id);
+  const newParent = folder ? folder.parent_id : null;
+  db.prepare("UPDATE folders SET parent_id = ? WHERE parent_id = ?").run(newParent, id);
+  db.prepare("UPDATE notes SET folder_id = NULL WHERE folder_id = ?").run(id);
   db.prepare("DELETE FROM folders WHERE id = ?").run(id);
 }
 
@@ -297,6 +343,7 @@ module.exports = {
   initDb, listNotes, getNote, createNote, updateNote,
   pinNote, trashNote, restoreNote, deleteNote,
   listFolders, createFolder, renameFolder, deleteFolder,
+  updateFolderColor, updateFolderParent, moveNoteToFolder, getNoteCountsByFolder,
   // new - tags
   listTags, createTag, deleteTag,
   addTagToNote, removeTagFromNote, getNoteTags,
