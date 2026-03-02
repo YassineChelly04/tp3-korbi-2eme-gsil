@@ -178,10 +178,12 @@ export function useSpeechToText(): UseSpeechToTextResult {
 
       // Send to main process for Whisper transcription
       setState('transcribing');
-      const text: string = await window.api.transcribeAudio(wavBuffer);
+      const result = await window.api.transcribeAudio(wavBuffer);
 
       if (unmountedRef.current) return;
 
+      // transcribeAudio now returns { text, language, segments }
+      const text = typeof result === 'string' ? result : result?.text || '';
       setTranscript(text);
       setState('done');
     } catch (err) {

@@ -12,6 +12,9 @@ const {
   CreateFolderSchema,
   RenameFolderSchema,
   FolderIdSchema,
+  UpdateFolderColorSchema,
+  UpdateFolderParentSchema,
+  MoveNoteToFolderSchema,
   SearchNotesSchema,
   ListVersionsSchema,
   CreateVersionSchema,
@@ -31,6 +34,10 @@ const {
   createFolder,
   renameFolder,
   deleteFolder,
+  updateFolderColor,
+  updateFolderParent,
+  moveNoteToFolder,
+  getNoteCountsByFolder,
   searchNotes,
   rebuildSearchIndex,
   createVersion,
@@ -121,9 +128,12 @@ async function createMainWindow() {
 
   if (isDev) {
     await mainWindow.loadURL("http://localhost:5173");
-    mainWindow.webContents.openDevTools({ mode: "detach" });
   } else {
     await mainWindow.loadFile(path.join(__dirname, "../dist/index.html"));
+  }
+
+  if (!app.isPackaged) {
+    mainWindow.webContents.openDevTools({ mode: "detach" });
   }
 
   resetAutoLockTimer();
@@ -318,9 +328,9 @@ ipcMain.handle("folders:list", async () => {
 
 ipcMain.handle("folders:create", async (_e, raw) => {
   try {
-    const { name } = CreateFolderSchema.parse(raw);
+    const { name, parentId } = CreateFolderSchema.parse(raw);
     resetAutoLockTimer();
-    return createFolder(name);
+    return createFolder(name, parentId || null);
   } catch (err) {
     if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
     throw err;
@@ -349,6 +359,47 @@ ipcMain.handle("folders:delete", async (_e, raw) => {
     if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
     throw err;
   }
+});
+
+ipcMain.handle("folders:updateColor", async (_e, raw) => {
+  try {
+    const { id, color } = UpdateFolderColorSchema.parse(raw);
+    resetAutoLockTimer();
+    updateFolderColor(id, color);
+    return true;
+  } catch (err) {
+    if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
+    throw err;
+  }
+});
+
+ipcMain.handle("folders:updateParent", async (_e, raw) => {
+  try {
+    const { id, parentId } = UpdateFolderParentSchema.parse(raw);
+    resetAutoLockTimer();
+    updateFolderParent(id, parentId);
+    return true;
+  } catch (err) {
+    if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
+    throw err;
+  }
+});
+
+ipcMain.handle("folders:moveNote", async (_e, raw) => {
+  try {
+    const { noteId, folderId } = MoveNoteToFolderSchema.parse(raw);
+    resetAutoLockTimer();
+    moveNoteToFolder(noteId, folderId);
+    return true;
+  } catch (err) {
+    if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
+    throw err;
+  }
+});
+
+ipcMain.handle("folders:noteCounts", async () => {
+  resetAutoLockTimer();
+  return getNoteCountsByFolder();
 });
 
 // ── Versions ──────────────────────────────────────────────────────
@@ -399,6 +450,30 @@ ipcMain.handle("speech:models", async () => {
   }
 });
 
+ipcMain.handle("speech:model-info", async () => {
+  try {
+    const { getModelInfo } = require("./services/whisper.service");
+    return getModelInfo();
+  } catch (err) {
+    return { error: err.message };
+  }
+});
+
+ipcMain.handle("speech:download-model", async (event, { modelName }) => {
+  const { downloadModel } = require("./services/whisper.service");
+  try {
+    const modelPath = await downloadModel(modelName, (progress) => {
+      event.sender.send("speech:download-progress", {
+        modelName,
+        ...progress,
+      });
+    });
+    return { success: true, path: modelPath };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+});
+
 ipcMain.handle("speech:transcribe", async (_e, { audioPath, language, model }) => {
   const { transcribe } = require("./services/whisper.service");
   return transcribe(audioPath, { language, model });
@@ -415,8 +490,8 @@ ipcMain.handle("speech:transcribe-buffer", async (_e, { audio, language, model }
   try {
     const buffer = Buffer.from(audio);
     fs.writeFileSync(tmpFile, buffer);
-    const text = await transcribe(tmpFile, { language, model });
-    return text;
+    const result = await transcribe(tmpFile, { language, model });
+    return result;
   } finally {
     // Clean up temp file
     try { fs.unlinkSync(tmpFile); } catch { /* ignore */ }

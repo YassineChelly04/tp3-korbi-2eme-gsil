@@ -44,6 +44,41 @@ export interface SpeechModel {
   path: string;
 }
 
+export interface SpeechModelInfo {
+  name: string;
+  file: string;
+  size: string;
+  sizeBytes: number;
+  available: boolean;
+  downloadedSize: number;
+  path: string;
+}
+
+export interface TranscriptionSegment {
+  start: number;
+  end: number;
+  text: string;
+}
+
+export interface TranscriptionResult {
+  text: string;
+  language: string;
+  segments: TranscriptionSegment[];
+}
+
+export interface ModelDownloadProgress {
+  modelName: string;
+  percent: number;
+  downloadedBytes: number;
+  totalBytes: number;
+}
+
+export interface ModelDownloadResult {
+  success: boolean;
+  path?: string;
+  error?: string;
+}
+
 // ── Electron API ─────────────────────────────────────────────────
 export interface ElectronAPI {
   // Auth
@@ -69,7 +104,10 @@ export interface ElectronAPI {
 
   // Speech
   listSpeechModels(): Promise<SpeechModel[]>;
-  transcribeAudio(audioBuffer: ArrayBuffer): Promise<string>;
+  getSpeechModelInfo(): Promise<SpeechModelInfo[]>;
+  downloadSpeechModel(modelName: string): Promise<ModelDownloadResult>;
+  onModelDownloadProgress(callback: (progress: ModelDownloadProgress) => void): void;
+  transcribeAudio(audioBuffer: ArrayBuffer): Promise<TranscriptionResult>;
 }
 
 declare global {

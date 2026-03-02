@@ -49,8 +49,8 @@ contextBridge.exposeInMainWorld("api", {
   listFolders() {
     return ipcRenderer.invoke("folders:list");
   },
-  createFolder(name) {
-    return ipcRenderer.invoke("folders:create", { name });
+  createFolder(name, parentId) {
+    return ipcRenderer.invoke("folders:create", { name, parentId });
   },
   renameFolder(id, name) {
     return ipcRenderer.invoke("folders:rename", { id, name });
@@ -58,10 +58,32 @@ contextBridge.exposeInMainWorld("api", {
   deleteFolder(id) {
     return ipcRenderer.invoke("folders:delete", { id });
   },
+  updateFolderColor(id, color) {
+    return ipcRenderer.invoke("folders:updateColor", { id, color });
+  },
+  updateFolderParent(id, parentId) {
+    return ipcRenderer.invoke("folders:updateParent", { id, parentId });
+  },
+  moveNoteToFolder(noteId, folderId) {
+    return ipcRenderer.invoke("folders:moveNote", { noteId, folderId });
+  },
+  getFolderNoteCounts() {
+    return ipcRenderer.invoke("folders:noteCounts");
+  },
 
   // Speech
   listSpeechModels() {
     return ipcRenderer.invoke("speech:models");
+  },
+  getSpeechModelInfo() {
+    return ipcRenderer.invoke("speech:model-info");
+  },
+  downloadSpeechModel(modelName) {
+    return ipcRenderer.invoke("speech:download-model", { modelName });
+  },
+  onModelDownloadProgress(callback) {
+    ipcRenderer.removeAllListeners("speech:download-progress");
+    ipcRenderer.on("speech:download-progress", (_event, progress) => callback(progress));
   },
   transcribeAudio(audioBuffer) {
     // Convert ArrayBuffer to a plain array for safe IPC serialization
