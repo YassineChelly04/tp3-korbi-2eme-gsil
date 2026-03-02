@@ -22,8 +22,8 @@ function App() {
     }
   }, []);
 
-  const handleAuthenticated = useCallback(async () => {
-    setSession({ authenticated: true });
+  const handleAuthenticated = useCallback(async (username) => {
+    setSession({ authenticated: true, username });
     try {
       const done = await window.api.getSetting("onboarding_complete");
       if (!done) setShowOnboarding(true);

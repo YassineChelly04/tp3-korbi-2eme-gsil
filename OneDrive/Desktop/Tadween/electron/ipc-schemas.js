@@ -2,8 +2,8 @@ const { z } = require("zod");
 
 // Auth schemas
 const LoginSchema = z.object({
+  username: z.string().min(1),
   password: z.string().min(1),
-  firstLaunch: z.boolean(),
 });
 
 // Notes schemas
@@ -36,6 +36,7 @@ const NoteIdSchema = z.object({
 // Folders schemas
 const CreateFolderSchema = z.object({
   name: z.string().min(1).max(100),
+  parentId: z.number().int().positive().nullable().optional(),
 });
 
 const RenameFolderSchema = z.object({
@@ -45,6 +46,21 @@ const RenameFolderSchema = z.object({
 
 const FolderIdSchema = z.object({
   id: z.number().int().positive(),
+});
+
+const UpdateFolderColorSchema = z.object({
+  id: z.number().int().positive(),
+  color: z.string().min(4).max(9),
+});
+
+const UpdateFolderParentSchema = z.object({
+  id: z.number().int().positive(),
+  parentId: z.number().int().positive().nullable(),
+});
+
+const MoveNoteToFolderSchema = z.object({
+  noteId: z.number().int().positive(),
+  folderId: z.number().int().positive().nullable(),
 });
 
 const SearchNotesSchema = z.object({
@@ -77,6 +93,9 @@ module.exports = {
   CreateFolderSchema,
   RenameFolderSchema,
   FolderIdSchema,
+  UpdateFolderColorSchema,
+  UpdateFolderParentSchema,
+  MoveNoteToFolderSchema,
   SearchNotesSchema,
   ListVersionsSchema,
   CreateVersionSchema,

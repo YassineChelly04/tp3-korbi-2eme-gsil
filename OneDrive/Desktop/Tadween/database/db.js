@@ -68,28 +68,17 @@ async function initDb() {
   `);
 
   // FTS5 virtual table for full-text search (indexed with decrypted content)
+  // Drop old corrupted external-content FTS table and triggers if they exist
+  try {
+    db.exec(`DROP TRIGGER IF EXISTS notes_fts_insert`);
+    db.exec(`DROP TRIGGER IF EXISTS notes_fts_delete`);
+    db.exec(`DROP TRIGGER IF EXISTS notes_fts_update`);
+    db.exec(`DROP TABLE IF EXISTS notes_fts`);
+  } catch (e) { /* ignore if already clean */ }
   db.exec(`
     CREATE VIRTUAL TABLE IF NOT EXISTS notes_fts USING fts5(
-      title, content, tags,
-      content='notes', content_rowid='id'
+      title, content, tags
     );
-
-    CREATE TRIGGER IF NOT EXISTS notes_fts_insert AFTER INSERT ON notes BEGIN
-      INSERT INTO notes_fts(rowid, title, content, tags)
-      VALUES (new.id, new.title, '', '');
-    END;
-
-    CREATE TRIGGER IF NOT EXISTS notes_fts_delete AFTER DELETE ON notes BEGIN
-      INSERT INTO notes_fts(notes_fts, rowid, title, content, tags)
-      VALUES ('delete', old.id, old.title, '', '');
-    END;
-
-    CREATE TRIGGER IF NOT EXISTS notes_fts_update AFTER UPDATE ON notes BEGIN
-      INSERT INTO notes_fts(notes_fts, rowid, title, content, tags)
-      VALUES ('delete', old.id, old.title, '', '');
-      INSERT INTO notes_fts(rowid, title, content, tags)
-      VALUES (new.id, new.title, '', '');
-    END;
   `);
 
   // Performance indexes
@@ -126,17 +115,40 @@ async function initDb() {
   if (!folderCols.includes("sort_order")) {
     db.exec("ALTER TABLE folders ADD COLUMN sort_order INTEGER DEFAULT 0;");
   }
+
+  // Migration: add user_id to notes and folders for multi-account support
+  const notesColsAfter = db.pragma("table_info(notes)").map((c) => c.name);
+  if (!notesColsAfter.includes("user_id")) {
+    db.exec("ALTER TABLE notes ADD COLUMN user_id TEXT DEFAULT 'default';");
+  }
+  const folderColsAfter = db.pragma("table_info(folders)").map((c) => c.name);
+  if (!folderColsAfter.includes("user_id")) {
+    db.exec("ALTER TABLE folders ADD COLUMN user_id TEXT DEFAULT 'default';");
+  }
+
+  // Index for user_id filtering
+  db.exec(`
+    CREATE INDEX IF NOT EXISTS idx_notes_user_id ON notes(user_id);
+    CREATE INDEX IF NOT EXISTS idx_folders_user_id ON folders(user_id);
+  `);
 }
 
 // ── Notes ──────────────────────────────────────────────────────────
 
-function listNotes({ filter = "all", folderId = null } = {}) {
+function listNotes({ filter = "all", folderId = null, userId = null } = {}) {
   let where = "is_deleted = 0";
+  const params = [];
   if (filter === "pinned") where = "is_pinned = 1 AND is_deleted = 0";
   else if (filter === "trash") where = "is_deleted = 1";
 
+  if (userId) {
+    where += " AND user_id = ?";
+    params.push(userId);
+  }
+
   if (folderId && filter === "all") {
-    where += ` AND folder_id = ${Number(folderId)}`;
+    where += " AND folder_id = ?";
+    params.push(Number(folderId));
   }
 
   const rows = db
@@ -145,7 +157,7 @@ function listNotes({ filter = "all", folderId = null } = {}) {
        FROM notes WHERE ${where}
        ORDER BY is_pinned DESC, updated_at DESC`
     )
-    .all();
+    .all(...params);
 
   return rows.map((row) => ({ ...row, preview: "" }));
 }
@@ -158,10 +170,10 @@ function getNote(id) {
     .get(id);
 }
 
-function createNote({ title, content_encrypted, nonce }) {
+function createNote({ title, content_encrypted, nonce, userId = "default" }) {
   const info = db
-    .prepare("INSERT INTO notes (title, content_encrypted, nonce) VALUES (?, ?, ?)")
-    .run(title, content_encrypted, nonce);
+    .prepare("INSERT INTO notes (title, content_encrypted, nonce, user_id) VALUES (?, ?, ?, ?)")
+    .run(title, content_encrypted, nonce, userId);
   return { id: info.lastInsertRowid, title, is_pinned: 0, preview: "" };
 }
 
@@ -191,12 +203,15 @@ function deleteNote(id) {
 
 // ── Folders ────────────────────────────────────────────────────────
 
-function listFolders() {
+function listFolders(userId = null) {
+  if (userId) {
+    return db.prepare("SELECT * FROM folders WHERE user_id = ? ORDER BY sort_order ASC, name ASC").all(userId);
+  }
   return db.prepare("SELECT * FROM folders ORDER BY sort_order ASC, name ASC").all();
 }
 
-function createFolder(name, parentId = null) {
-  const info = db.prepare("INSERT INTO folders (name, parent_id) VALUES (?, ?)").run(name, parentId);
+function createFolder(name, parentId = null, userId = "default") {
+  const info = db.prepare("INSERT INTO folders (name, parent_id, user_id) VALUES (?, ?, ?)").run(name, parentId, userId);
   return { id: info.lastInsertRowid, name, color: "#6366f1", parent_id: parentId, sort_order: 0 };
 }
 
@@ -216,7 +231,12 @@ function moveNoteToFolder(noteId, folderId) {
   db.prepare("UPDATE notes SET folder_id = ? WHERE id = ?").run(folderId, noteId);
 }
 
-function getNoteCountsByFolder() {
+function getNoteCountsByFolder(userId = null) {
+  if (userId) {
+    return db.prepare(
+      "SELECT folder_id, COUNT(*) as count FROM notes WHERE is_deleted = 0 AND folder_id IS NOT NULL AND user_id = ? GROUP BY folder_id"
+    ).all(userId);
+  }
   return db.prepare(
     "SELECT folder_id, COUNT(*) as count FROM notes WHERE is_deleted = 0 AND folder_id IS NOT NULL GROUP BY folder_id"
   ).all();
@@ -279,9 +299,12 @@ function getVersion(versionId) {
 
 // ── Full-Text Search ─────────────────────────────────────────────
 
-function searchNotes(query) {
+function searchNotes(query, userId = null) {
   if (!query || !query.trim()) return [];
   const safeQuery = query.trim().replace(/"/g, '""');
+  const userFilter = userId ? " AND n.user_id = ?" : "";
+  const params = [`"${safeQuery}"`];
+  if (userId) params.push(userId);
   return db
     .prepare(
       `SELECT
@@ -292,10 +315,10 @@ function searchNotes(query) {
        FROM notes_fts
        JOIN notes n ON n.id = notes_fts.rowid
        WHERE notes_fts MATCH ?
-         AND n.is_deleted = 0
+         AND n.is_deleted = 0${userFilter}
        ORDER BY rank`
     )
-    .all(`"${safeQuery}"`);
+    .all(...params);
 }
 
 function rebuildSearchIndex(notes) {

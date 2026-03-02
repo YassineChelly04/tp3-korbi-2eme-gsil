@@ -319,14 +319,14 @@ export default function LoginScreen({ onAuthenticated }) {
 
     setLoading(true);
     try {
-      const isFirstLaunch = tab === "signup";
-      const ok = await window.api.login(password, isFirstLaunch);
-      if (!ok) {
+      const result = await window.api.login(username, password);
+      if (!result || !result.success) {
         setError(t("auth.error_invalid"));
         triggerShake();
       } else {
+        localStorage.setItem("tadween_username", username);
         setSuccess(true);
-        setTimeout(() => onAuthenticated(), 700);
+        setTimeout(() => onAuthenticated(username), 700);
       }
     } catch (err) {
       setError(err?.message || t("auth.error_invalid"));
@@ -591,7 +591,7 @@ export default function LoginScreen({ onAuthenticated }) {
             <motion.button
               type="submit"
               className="tw-submit"
-              disabled={loading || !password}
+              disabled={loading || !password || !username}
               whileHover={
                 !loading && !success ? { scale: 1.02, y: -2 } : undefined
               }

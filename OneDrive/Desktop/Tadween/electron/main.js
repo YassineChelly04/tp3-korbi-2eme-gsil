@@ -49,12 +49,11 @@ const {
 } = require("../database/db");
 const {
   initCrypto,
-  deriveKeyFromPassword,
-  setSessionKey,
+  loginAccount,
+  getCurrentUserId,
   clearSessionKey,
   encryptContent,
   decryptContent,
-  verifyPasswordWithTest,
 } = require("../security/crypto");
 
 // ── Rate Limiting ────────────────────────────────────────────────
@@ -156,21 +155,19 @@ app.on("window-all-closed", () => {
 
 ipcMain.handle("auth:login", async (_e, raw) => {
   try {
-    const { password, firstLaunch } = LoginSchema.parse(raw);
+    const { username, password } = LoginSchema.parse(raw);
     const rateCheck = checkRateLimit();
     if (!rateCheck.allowed) {
       return { error: "RATE_LIMITED", retryAfterSec: rateCheck.retryAfterSec };
     }
     resetAutoLockTimer();
-    const key = await deriveKeyFromPassword(password);
-    const ok = await verifyPasswordWithTest(key, firstLaunch);
-    if (!ok) {
+    const result = await loginAccount(username, password);
+    if (!result.success) {
       recordLoginFailure();
       return false;
     }
     resetLoginAttempts();
-    setSessionKey(key);
-    return true;
+    return { success: true, userId: result.userId };
   } catch (err) {
     if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
     throw err;
@@ -189,7 +186,7 @@ ipcMain.handle("notes:list", async (_e, raw) => {
   try {
     const { filter, folderId } = ListNotesSchema.parse(raw);
     resetAutoLockTimer();
-    return listNotes({ filter, folderId });
+    return listNotes({ filter, folderId, userId: getCurrentUserId() });
   } catch (err) {
     if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
     throw err;
@@ -213,7 +210,7 @@ ipcMain.handle("notes:get", async (_e, raw) => {
 ipcMain.handle("notes:create", async () => {
   resetAutoLockTimer();
   const { ciphertext, nonce } = await encryptContent({ type: "doc", content: [] });
-  return createNote({ title: "New note", content_encrypted: ciphertext, nonce });
+  return createNote({ title: "New note", content_encrypted: ciphertext, nonce, userId: getCurrentUserId() });
 });
 
 ipcMain.handle("notes:update", async (_e, raw) => {
@@ -290,7 +287,7 @@ ipcMain.handle("notes:search", async (_e, raw) => {
   try {
     const { query } = SearchNotesSchema.parse(raw);
     resetAutoLockTimer();
-    return searchNotes(query);
+    return searchNotes(query, getCurrentUserId());
   } catch (err) {
     if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
     throw err;
@@ -299,7 +296,7 @@ ipcMain.handle("notes:search", async (_e, raw) => {
 
 ipcMain.handle("notes:rebuild-index", async () => {
   resetAutoLockTimer();
-  const allNotes = listNotes({ filter: "all" });
+  const allNotes = listNotes({ filter: "all", userId: getCurrentUserId() });
   const decryptedNotes = [];
   for (const note of allNotes) {
     try {
@@ -325,14 +322,14 @@ ipcMain.handle("notes:rebuild-index", async () => {
 
 ipcMain.handle("folders:list", async () => {
   resetAutoLockTimer();
-  return listFolders();
+  return listFolders(getCurrentUserId());
 });
 
 ipcMain.handle("folders:create", async (_e, raw) => {
   try {
     const { name, parentId } = CreateFolderSchema.parse(raw);
     resetAutoLockTimer();
-    return createFolder(name, parentId || null);
+    return createFolder(name, parentId || null, getCurrentUserId());
   } catch (err) {
     if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
     throw err;
@@ -401,7 +398,7 @@ ipcMain.handle("folders:moveNote", async (_e, raw) => {
 
 ipcMain.handle("folders:noteCounts", async () => {
   resetAutoLockTimer();
-  return getNoteCountsByFolder();
+  return getNoteCountsByFolder(getCurrentUserId());
 });
 
 // ── Versions ──────────────────────────────────────────────────────
