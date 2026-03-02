@@ -38,6 +38,33 @@ const {
   verifyPasswordWithTest,
 } = require("../security/crypto");
 
+// ── Rate Limiting ────────────────────────────────────────────────
+let loginAttempts = 0;
+let lockoutUntil = 0;
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOCKOUT_BASE_MS = 30000; // 30 seconds
+
+function checkRateLimit() {
+  if (Date.now() < lockoutUntil) {
+    const remaining = Math.ceil((lockoutUntil - Date.now()) / 1000);
+    return { allowed: false, retryAfterSec: remaining };
+  }
+  return { allowed: true };
+}
+
+function recordLoginFailure() {
+  loginAttempts++;
+  if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+    const multiplier = Math.pow(2, loginAttempts - MAX_LOGIN_ATTEMPTS);
+    lockoutUntil = Date.now() + LOCKOUT_BASE_MS * multiplier;
+  }
+}
+
+function resetLoginAttempts() {
+  loginAttempts = 0;
+  lockoutUntil = 0;
+}
+
 let mainWindow = null;
 let autoLockTimeout = null;
 const AUTO_LOCK_MINUTES = 10;
@@ -71,6 +98,18 @@ async function createMainWindow() {
     },
   });
 
+  // Content Security Policy
+  mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': [
+          "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'"
+        ],
+      },
+    });
+  });
+
   if (isDev) {
     await mainWindow.loadURL("http://localhost:5173");
     mainWindow.webContents.openDevTools({ mode: "detach" });
@@ -97,10 +136,18 @@ app.on("window-all-closed", () => {
 ipcMain.handle("auth:login", async (_e, raw) => {
   try {
     const { password, firstLaunch } = LoginSchema.parse(raw);
+    const rateCheck = checkRateLimit();
+    if (!rateCheck.allowed) {
+      return { error: "RATE_LIMITED", retryAfterSec: rateCheck.retryAfterSec };
+    }
     resetAutoLockTimer();
     const key = await deriveKeyFromPassword(password);
     const ok = await verifyPasswordWithTest(key, firstLaunch);
-    if (!ok) return false;
+    if (!ok) {
+      recordLoginFailure();
+      return false;
+    }
+    resetLoginAttempts();
     setSessionKey(key);
     return true;
   } catch (err) {
