@@ -43,6 +43,9 @@ const {
   createVersion,
   listVersions,
   getVersion,
+  getSetting,
+  setSetting,
+  getAllSettings,
 } = require("../database/db");
 const {
   initCrypto,
@@ -114,26 +117,25 @@ async function createMainWindow() {
     },
   });
 
-  // Content Security Policy
-  mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        'Content-Security-Policy': [
-          "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'"
-        ],
-      },
+  // Content Security Policy (production only - dev needs flexible CSP for HMR)
+  if (!isDev) {
+    mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+      callback({
+        responseHeaders: {
+          ...details.responseHeaders,
+          'Content-Security-Policy': [
+            "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'"
+          ],
+        },
+      });
     });
-  });
-
-  if (isDev) {
-    await mainWindow.loadURL("http://localhost:5173");
-  } else {
-    await mainWindow.loadFile(path.join(__dirname, "../dist/index.html"));
   }
 
-  if (!app.isPackaged) {
-    mainWindow.webContents.openDevTools({ mode: "detach" });
+  if (isDev) {
+    const devUrl = process.env.VITE_DEV_SERVER_URL || "http://localhost:5173";
+    await mainWindow.loadURL(devUrl);
+  } else {
+    await mainWindow.loadFile(path.join(__dirname, "../dist/index.html"));
   }
 
   resetAutoLockTimer();
@@ -437,6 +439,24 @@ ipcMain.handle("versions:restore", async (_e, raw) => {
     if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
     throw err;
   }
+});
+
+// ── Settings ──────────────────────────────────────────────────────
+
+ipcMain.handle("settings:get", (_e, key) => {
+  resetAutoLockTimer();
+  return getSetting(key);
+});
+
+ipcMain.handle("settings:set", (_e, key, value) => {
+  resetAutoLockTimer();
+  setSetting(key, value);
+  return true;
+});
+
+ipcMain.handle("settings:getAll", () => {
+  resetAutoLockTimer();
+  return getAllSettings();
 });
 
 // ── Speech ────────────────────────────────────────────────────────

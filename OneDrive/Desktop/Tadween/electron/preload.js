@@ -91,6 +91,17 @@ contextBridge.exposeInMainWorld("api", {
     return ipcRenderer.invoke("speech:transcribe-buffer", { audio: Array.from(bytes) });
   },
 
+  // Settings
+  getSetting(key) {
+    return ipcRenderer.invoke("settings:get", key);
+  },
+  setSetting(key, value) {
+    return ipcRenderer.invoke("settings:set", key, value);
+  },
+  getAllSettings() {
+    return ipcRenderer.invoke("settings:getAll");
+  },
+
   // Versions
   listVersions(noteId) {
     return ipcRenderer.invoke("versions:list", { noteId });
