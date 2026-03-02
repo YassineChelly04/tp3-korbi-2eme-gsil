@@ -63,6 +63,11 @@ contextBridge.exposeInMainWorld("api", {
   listSpeechModels() {
     return ipcRenderer.invoke("speech:models");
   },
+  transcribeAudio(audioBuffer) {
+    // Convert ArrayBuffer to a plain array for safe IPC serialization
+    const bytes = new Uint8Array(audioBuffer);
+    return ipcRenderer.invoke("speech:transcribe-buffer", { audio: Array.from(bytes) });
+  },
 
   // Versions
   listVersions(noteId) {
