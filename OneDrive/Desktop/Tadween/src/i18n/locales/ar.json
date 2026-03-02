@@ -108,5 +108,27 @@
         "restore": "استعادة هذا الإصدار",
         "restored": "تمّت استعادة الإصدار!",
         "close": "إغلاق"
+    },
+    "onboarding": {
+        "welcome": "مرحباً بك في تدوين",
+        "tagline": "أفكارك، بأمان.",
+        "get_started": "هيا نبدأ ←",
+        "features_title": "لماذا تدوين؟",
+        "feature_encryption_title": "تشفير بمستوى عسكري",
+        "feature_encryption_desc": "ملاحظاتك مشفرة بـ XChaCha20-Poly1305. أنت وحدك من يستطيع قراءتها.",
+        "feature_voice_title": "تحويل الصوت إلى نص",
+        "feature_voice_desc": "تحدّث بأفكارك. يقوم Whisper AI بالنسخ محلياً، بدون اتصال بالإنترنت.",
+        "feature_offline_title": "يعمل بدون إنترنت",
+        "feature_offline_desc": "لا سحابة. لا خوادم. كل شيء يبقى على جهازك.",
+        "continue": "متابعة ←",
+        "personalize": "اجعله على ذوقك",
+        "choose_theme": "اختر المظهر",
+        "choose_language": "اختر اللغة",
+        "almost_there": "أوشكنا ←",
+        "ready": "جاهز",
+        "all_set": "كل شيء جاهز!",
+        "tip_new_note": "إنشاء ملاحظة جديدة",
+        "tip_shortcuts": "عرض جميع الاختصارات",
+        "start_writing": "ابدأ الكتابة ✨"
     }
 }

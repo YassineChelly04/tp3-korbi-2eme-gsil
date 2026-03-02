@@ -108,5 +108,27 @@
         "restore": "Restore this version",
         "restored": "Version restored!",
         "close": "Close"
+    },
+    "onboarding": {
+        "welcome": "Welcome to Tadween",
+        "tagline": "Your Thoughts, Locked.",
+        "get_started": "Let's get started →",
+        "features_title": "Why Tadween?",
+        "feature_encryption_title": "Military-Grade Encryption",
+        "feature_encryption_desc": "Your notes are encrypted with XChaCha20-Poly1305. Only you can read them.",
+        "feature_voice_title": "Voice to Text",
+        "feature_voice_desc": "Speak your thoughts. Whisper AI transcribes locally, 100% offline.",
+        "feature_offline_title": "Works Offline",
+        "feature_offline_desc": "No cloud. No servers. Everything stays on your device.",
+        "continue": "Continue →",
+        "personalize": "Make it yours",
+        "choose_theme": "Choose your theme",
+        "choose_language": "Choose your language",
+        "almost_there": "Almost there →",
+        "ready": "Ready",
+        "all_set": "You're all set!",
+        "tip_new_note": "Create a new note",
+        "tip_shortcuts": "View all shortcuts",
+        "start_writing": "Start Writing ✨"
     }
 }

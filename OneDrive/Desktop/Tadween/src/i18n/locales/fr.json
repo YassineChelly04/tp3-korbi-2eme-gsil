@@ -108,5 +108,27 @@
         "restore": "Restaurer cette version",
         "restored": "Version restaurée !",
         "close": "Fermer"
+    },
+    "onboarding": {
+        "welcome": "Bienvenue sur Tadween",
+        "tagline": "Vos pensées, sécurisées.",
+        "get_started": "C'est parti →",
+        "features_title": "Pourquoi Tadween ?",
+        "feature_encryption_title": "Chiffrement de niveau militaire",
+        "feature_encryption_desc": "Vos notes sont chiffrées avec XChaCha20-Poly1305. Vous seul pouvez les lire.",
+        "feature_voice_title": "Voix vers texte",
+        "feature_voice_desc": "Dictez vos pensées. Whisper IA transcrit localement, 100 % hors ligne.",
+        "feature_offline_title": "Fonctionne hors ligne",
+        "feature_offline_desc": "Pas de cloud. Pas de serveurs. Tout reste sur votre appareil.",
+        "continue": "Continuer →",
+        "personalize": "Personnalisez",
+        "choose_theme": "Choisissez votre thème",
+        "choose_language": "Choisissez votre langue",
+        "almost_there": "Presque fini →",
+        "ready": "Prêt",
+        "all_set": "Tout est prêt !",
+        "tip_new_note": "Créer une nouvelle note",
+        "tip_shortcuts": "Voir tous les raccourcis",
+        "start_writing": "Commencer à écrire ✨"
     }
 }
