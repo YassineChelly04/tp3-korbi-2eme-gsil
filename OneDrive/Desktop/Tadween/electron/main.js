@@ -12,6 +12,10 @@ const {
   CreateFolderSchema,
   RenameFolderSchema,
   FolderIdSchema,
+  SearchNotesSchema,
+  ListVersionsSchema,
+  CreateVersionSchema,
+  RestoreVersionSchema,
 } = require("./ipc-schemas");
 const {
   initDb,
@@ -27,6 +31,11 @@ const {
   createFolder,
   renameFolder,
   deleteFolder,
+  searchNotes,
+  rebuildSearchIndex,
+  createVersion,
+  listVersions,
+  getVersion,
 } = require("../database/db");
 const {
   initCrypto,
@@ -263,6 +272,43 @@ ipcMain.handle("notes:delete", async (_e, raw) => {
   }
 });
 
+// ── Search ─────────────────────────────────────────────────────────
+
+ipcMain.handle("notes:search", async (_e, raw) => {
+  try {
+    const { query } = SearchNotesSchema.parse(raw);
+    resetAutoLockTimer();
+    return searchNotes(query);
+  } catch (err) {
+    if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
+    throw err;
+  }
+});
+
+ipcMain.handle("notes:rebuild-index", async () => {
+  resetAutoLockTimer();
+  const allNotes = listNotes({ filter: "all" });
+  const decryptedNotes = [];
+  for (const note of allNotes) {
+    try {
+      const row = getNote(note.id);
+      if (!row) continue;
+      const content = await decryptContent(row.content_encrypted, row.nonce);
+      const contentText = typeof content === "string" ? content : JSON.stringify(content);
+      decryptedNotes.push({
+        id: note.id,
+        title: note.title || "",
+        content: contentText,
+        tags: "",
+      });
+    } catch {
+      // Skip notes that fail to decrypt
+    }
+  }
+  rebuildSearchIndex(decryptedNotes);
+  return { indexed: decryptedNotes.length };
+});
+
 // ── Folders ───────────────────────────────────────────────────────
 
 ipcMain.handle("folders:list", async () => {
@@ -302,5 +348,77 @@ ipcMain.handle("folders:delete", async (_e, raw) => {
   } catch (err) {
     if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
     throw err;
+  }
+});
+
+// ── Versions ──────────────────────────────────────────────────────
+
+ipcMain.handle("versions:list", async (_e, raw) => {
+  try {
+    const { noteId } = ListVersionsSchema.parse(raw);
+    resetAutoLockTimer();
+    return listVersions(noteId);
+  } catch (err) {
+    if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
+    throw err;
+  }
+});
+
+ipcMain.handle("versions:create", async (_e, raw) => {
+  try {
+    const { noteId, title, encryptedContent, nonce } = CreateVersionSchema.parse(raw);
+    resetAutoLockTimer();
+    return createVersion(noteId, title, encryptedContent, nonce);
+  } catch (err) {
+    if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
+    throw err;
+  }
+});
+
+ipcMain.handle("versions:restore", async (_e, raw) => {
+  try {
+    const { versionId } = RestoreVersionSchema.parse(raw);
+    resetAutoLockTimer();
+    const version = getVersion(versionId);
+    if (!version) return null;
+    return version;
+  } catch (err) {
+    if (err instanceof ZodError) return { error: "VALIDATION_ERROR", details: err.errors };
+    throw err;
+  }
+});
+
+// ── Speech ────────────────────────────────────────────────────────
+
+ipcMain.handle("speech:models", async () => {
+  try {
+    const { listAvailableModels } = require("./services/whisper.service");
+    return listAvailableModels();
+  } catch {
+    return [];
+  }
+});
+
+ipcMain.handle("speech:transcribe", async (_e, { audioPath, language, model }) => {
+  const { transcribe } = require("./services/whisper.service");
+  return transcribe(audioPath, { language, model });
+});
+
+ipcMain.handle("speech:transcribe-buffer", async (_e, { audio, language, model }) => {
+  const fs = require("fs");
+  const os = require("os");
+  const { transcribe } = require("./services/whisper.service");
+
+  // Write WAV buffer to a temp file for whisper-node
+  const tmpDir = os.tmpdir();
+  const tmpFile = path.join(tmpDir, `tadween_audio_${Date.now()}.wav`);
+  try {
+    const buffer = Buffer.from(audio);
+    fs.writeFileSync(tmpFile, buffer);
+    const text = await transcribe(tmpFile, { language, model });
+    return text;
+  } finally {
+    // Clean up temp file
+    try { fs.unlinkSync(tmpFile); } catch { /* ignore */ }
   }
 });

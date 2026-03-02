@@ -47,6 +47,26 @@ const FolderIdSchema = z.object({
   id: z.number().int().positive(),
 });
 
+const SearchNotesSchema = z.object({
+  query: z.string().min(1).max(500),
+});
+
+// Versions schemas
+const ListVersionsSchema = z.object({
+  noteId: z.number().int().positive(),
+});
+
+const CreateVersionSchema = z.object({
+  noteId: z.number().int().positive(),
+  title: z.string(),
+  encryptedContent: z.string(),
+  nonce: z.string(),
+});
+
+const RestoreVersionSchema = z.object({
+  versionId: z.number().int().positive(),
+});
+
 module.exports = {
   LoginSchema,
   ListNotesSchema,
@@ -57,4 +77,8 @@ module.exports = {
   CreateFolderSchema,
   RenameFolderSchema,
   FolderIdSchema,
+  SearchNotesSchema,
+  ListVersionsSchema,
+  CreateVersionSchema,
+  RestoreVersionSchema,
 };
