@@ -1,0 +1,76 @@
+{
+    "app": {
+        "name": "تدوين",
+        "tagline": "أفكارك، بأمان."
+    },
+    "auth": {
+        "title": "تدوين",
+        "tagline": "أفكارك، بأمان.",
+        "password_label": "كلمة المرور الرئيسية",
+        "password_placeholder": "أدخل كلمة مرورك",
+        "first_launch_toggle": "المرة الأولى؟ أنشئ كلمة مرور",
+        "submit_unlock": "فتح القفل",
+        "submit_create": "إنشاء والدخول",
+        "submitting": "جارٍ التحقق...",
+        "error_invalid": "كلمة مرور غير صحيحة. حاول مجدداً.",
+        "footer": "كلمة مرورك لا تُخزَّن أبداً. جميع الملاحظات مشفرة بـ Argon2id."
+    },
+    "sidebar": {
+        "all_notes": "جميع الملاحظات",
+        "pinned": "المثبتة",
+        "trash": "المهملات",
+        "folders": "المجلدات",
+        "new_folder": "مجلد جديد",
+        "search_placeholder": "بحث...",
+        "lock": "قفل",
+        "new_note": "ملاحظة جديدة",
+        "welcome": "أهلاً بعودتك!",
+        "user": "المستخدم"
+    },
+    "editor": {
+        "title_placeholder": "عنوان الملاحظة...",
+        "tag_placeholder": "إضافة وسم...",
+        "body_placeholder": "ابدأ الكتابة...",
+        "saved": "محفوظ",
+        "saving": "جارٍ الحفظ…",
+        "save": "حفظ",
+        "note_created": "تم إنشاء الملاحظة!",
+        "pin": "تثبيت",
+        "unpin": "إلغاء التثبيت",
+        "delete": "نقل إلى المهملات"
+    },
+    "empty": {
+        "title": "لا ملاحظات بعد",
+        "subtitle": "انقر على 'ملاحظة جديدة' للبدء!",
+        "cta": "ملاحظة جديدة"
+    },
+    "shortcuts": {
+        "new_note": "Ctrl+N",
+        "save": "Ctrl+S",
+        "search": "Ctrl+F",
+        "lock": "Ctrl+L",
+        "title": "اختصارات لوحة المفاتيح",
+        "close": "إغلاق",
+        "cat_navigation": "التنقل",
+        "cat_editor": "المحرر",
+        "cat_app": "إجراءات التطبيق",
+        "focus_search": "التركيز على البحث",
+        "toggle_sidebar": "تبديل الشريط الجانبي",
+        "close_modal": "إغلاق النافذة / اللوحة",
+        "new_note_desc": "ملاحظة جديدة",
+        "save_desc": "حفظ الملاحظة الحالية",
+        "delete_note": "حذف الملاحظة الحالية",
+        "toggle_voice": "تبديل الإدخال الصوتي",
+        "lock_desc": "قفل التطبيق",
+        "open_settings": "فتح الإعدادات",
+        "show_shortcuts": "عرض الاختصارات"
+    },
+    "versions": {
+        "title": "سجل الإصدارات",
+        "empty": "لا توجد إصدارات بعد",
+        "empty_hint": "يتم إنشاء الإصدارات عند حفظ لقطات من ملاحظتك.",
+        "restore": "استعادة هذا الإصدار",
+        "restored": "تمّت استعادة الإصدار!",
+        "close": "إغلاق"
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "app": {
+        "name": "Tadween",
+        "tagline": "Vos pensées, sécurisées."
+    },
+    "auth": {
+        "title": "Tadween",
+        "tagline": "Vos pensées, sécurisées.",
+        "password_label": "Mot de passe maître",
+        "password_placeholder": "Entrez votre mot de passe",
+        "first_launch_toggle": "Première fois ? Créer un mot de passe",
+        "submit_unlock": "Déverrouiller",
+        "submit_create": "Créer & Entrer",
+        "submitting": "Vérification...",
+        "error_invalid": "Mot de passe incorrect. Veuillez réessayer.",
+        "footer": "Votre mot de passe n'est jamais stocké. Toutes les notes sont chiffrées avec Argon2id."
+    },
+    "sidebar": {
+        "all_notes": "Toutes les notes",
+        "pinned": "Épinglées",
+        "trash": "Corbeille",
+        "folders": "Dossiers",
+        "new_folder": "Nouveau dossier",
+        "search_placeholder": "Rechercher...",
+        "lock": "Verrouiller",
+        "new_note": "Nouvelle note",
+        "welcome": "Bon retour !",
+        "user": "Utilisateur"
+    },
+    "editor": {
+        "title_placeholder": "Titre de la note...",
+        "tag_placeholder": "Ajouter un tag...",
+        "body_placeholder": "Commencez à écrire...",
+        "saved": "Enregistré",
+        "saving": "Enregistrement…",
+        "save": "Enregistrer",
+        "note_created": "Note créée !",
+        "pin": "Épingler",
+        "unpin": "Désépingler",
+        "delete": "Mettre à la corbeille"
+    },
+    "empty": {
+        "title": "Aucune note",
+        "subtitle": "Cliquez sur 'Nouvelle note' pour commencer !",
+        "cta": "Nouvelle note"
+    },
+    "shortcuts": {
+        "new_note": "Ctrl+N",
+        "save": "Ctrl+S",
+        "search": "Ctrl+F",
+        "lock": "Ctrl+L",
+        "title": "Raccourcis clavier",
+        "close": "Fermer",
+        "cat_navigation": "Navigation",
+        "cat_editor": "Éditeur",
+        "cat_app": "Actions",
+        "focus_search": "Rechercher",
+        "toggle_sidebar": "Basculer la barre latérale",
+        "close_modal": "Fermer modale / panneau",
+        "new_note_desc": "Nouvelle note",
+        "save_desc": "Enregistrer la note",
+        "delete_note": "Supprimer la note",
+        "toggle_voice": "Saisie vocale",
+        "lock_desc": "Verrouiller",
+        "open_settings": "Ouvrir les paramètres",
+        "show_shortcuts": "Afficher les raccourcis"
+    },
+    "versions": {
+        "title": "Historique des versions",
+        "empty": "Aucune version",
+        "empty_hint": "Les versions sont créées lorsque vous enregistrez des instantanés de votre note.",
+        "restore": "Restaurer cette version",
+        "restored": "Version restaurée !",
+        "close": "Fermer"
+    }
+}

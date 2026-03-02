@@ -1,0 +1,76 @@
+{
+    "app": {
+        "name": "Tadween",
+        "tagline": "Your Thoughts, Locked."
+    },
+    "auth": {
+        "title": "Tadween",
+        "tagline": "Your Thoughts, Locked.",
+        "password_label": "Master Password",
+        "password_placeholder": "Enter your password",
+        "first_launch_toggle": "First time? Create password",
+        "submit_unlock": "Unlock",
+        "submit_create": "Create & Enter",
+        "submitting": "Verifying...",
+        "error_invalid": "Invalid password. Please try again.",
+        "footer": "Your password is never stored. All notes are encrypted with Argon2id."
+    },
+    "sidebar": {
+        "all_notes": "All Notes",
+        "pinned": "Pinned",
+        "trash": "Trash",
+        "folders": "Folders",
+        "new_folder": "New folder",
+        "search_placeholder": "Search...",
+        "lock": "Lock",
+        "new_note": "New Note",
+        "welcome": "Welcome back!",
+        "user": "User"
+    },
+    "editor": {
+        "title_placeholder": "Note title...",
+        "tag_placeholder": "Add tag...",
+        "body_placeholder": "Start writing...",
+        "saved": "Saved",
+        "saving": "Saving…",
+        "save": "Save",
+        "note_created": "Note created!",
+        "pin": "Pin note",
+        "unpin": "Unpin note",
+        "delete": "Move to trash"
+    },
+    "empty": {
+        "title": "No notes yet",
+        "subtitle": "Click 'New Note' to get started!",
+        "cta": "New Note"
+    },
+    "shortcuts": {
+        "new_note": "Ctrl+N",
+        "save": "Ctrl+S",
+        "search": "Ctrl+F",
+        "lock": "Ctrl+L",
+        "title": "Keyboard Shortcuts",
+        "close": "Close",
+        "cat_navigation": "Navigation",
+        "cat_editor": "Editor",
+        "cat_app": "App Actions",
+        "focus_search": "Focus search",
+        "toggle_sidebar": "Toggle sidebar",
+        "close_modal": "Close modal / panel",
+        "new_note_desc": "New note",
+        "save_desc": "Save current note",
+        "delete_note": "Delete current note",
+        "toggle_voice": "Toggle voice input",
+        "lock_desc": "Lock app",
+        "open_settings": "Open settings",
+        "show_shortcuts": "Show shortcuts"
+    },
+    "versions": {
+        "title": "Version History",
+        "empty": "No versions yet",
+        "empty_hint": "Versions are created when you save snapshots of your note.",
+        "restore": "Restore this version",
+        "restored": "Version restored!",
+        "close": "Close"
+    }
+}
