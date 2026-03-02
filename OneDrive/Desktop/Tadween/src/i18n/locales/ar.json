@@ -27,6 +27,17 @@
         "welcome": "أهلاً بعودتك!",
         "user": "المستخدم"
     },
+    "folders": {
+        "rename": "إعادة التسمية",
+        "change_color": "تغيير اللون",
+        "new_subfolder": "مجلد فرعي جديد",
+        "delete": "حذف",
+        "empty": "لا توجد مجلدات بعد",
+        "empty_hint": "أنشئ مجلداً لتنظيم ملاحظاتك.",
+        "note_count": "{{count}} ملاحظة",
+        "note_count_plural": "{{count}} ملاحظات",
+        "drop_hint": "أسقط الملاحظة هنا"
+    },
     "editor": {
         "title_placeholder": "عنوان الملاحظة...",
         "tag_placeholder": "إضافة وسم...",
@@ -37,7 +48,9 @@
         "note_created": "تم إنشاء الملاحظة!",
         "pin": "تثبيت",
         "unpin": "إلغاء التثبيت",
-        "delete": "نقل إلى المهملات"
+        "delete": "نقل إلى المهملات",
+        "bold": "غامق",
+        "italic": "مائل"
     },
     "empty": {
         "title": "لا ملاحظات بعد",
@@ -64,6 +77,29 @@
         "lock_desc": "قفل التطبيق",
         "open_settings": "فتح الإعدادات",
         "show_shortcuts": "عرض الاختصارات"
+    },
+    "settings": {
+        "title": "الإعدادات",
+        "language": "اللغة",
+        "theme": "المظهر",
+        "theme_dark": "داكن",
+        "theme_light": "فاتح",
+        "theme_system": "النظام",
+        "editor": "المحرر",
+        "font_size": "حجم الخط",
+        "auto_save": "حفظ تلقائي",
+        "auto_save_desc": "حفظ التغييرات تلقائياً",
+        "spell_check": "التدقيق الإملائي",
+        "spell_check_desc": "وضع خط تحت الأخطاء الإملائية",
+        "security": "الأمان",
+        "auto_lock": "القفل التلقائي",
+        "auto_lock_desc": "القفل بعد {{minutes}} دقائق من عدم النشاط",
+        "hour": "ساعة",
+        "speech": "تحويل الكلام إلى نص",
+        "accessibility": "إمكانية الوصول",
+        "reduced_motion": "تقليل الحركات",
+        "reduced_motion_desc": "تعطيل تأثيرات الحركة",
+        "keyboard_shortcuts": "اختصارات لوحة المفاتيح"
     },
     "versions": {
         "title": "سجل الإصدارات",

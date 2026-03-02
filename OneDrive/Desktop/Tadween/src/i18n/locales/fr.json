@@ -27,6 +27,17 @@
         "welcome": "Bon retour !",
         "user": "Utilisateur"
     },
+    "folders": {
+        "rename": "Renommer",
+        "change_color": "Changer la couleur",
+        "new_subfolder": "Nouveau sous-dossier",
+        "delete": "Supprimer",
+        "empty": "Aucun dossier",
+        "empty_hint": "Créez un dossier pour organiser vos notes.",
+        "note_count": "{{count}} note",
+        "note_count_plural": "{{count}} notes",
+        "drop_hint": "Déposer la note ici"
+    },
     "editor": {
         "title_placeholder": "Titre de la note...",
         "tag_placeholder": "Ajouter un tag...",
@@ -37,7 +48,9 @@
         "note_created": "Note créée !",
         "pin": "Épingler",
         "unpin": "Désépingler",
-        "delete": "Mettre à la corbeille"
+        "delete": "Mettre à la corbeille",
+        "bold": "Gras",
+        "italic": "Italique"
     },
     "empty": {
         "title": "Aucune note",
@@ -64,6 +77,29 @@
         "lock_desc": "Verrouiller",
         "open_settings": "Ouvrir les paramètres",
         "show_shortcuts": "Afficher les raccourcis"
+    },
+    "settings": {
+        "title": "Paramètres",
+        "language": "Langue",
+        "theme": "Thème",
+        "theme_dark": "Sombre",
+        "theme_light": "Clair",
+        "theme_system": "Système",
+        "editor": "Éditeur",
+        "font_size": "Taille de police",
+        "auto_save": "Sauvegarde auto",
+        "auto_save_desc": "Enregistrer les modifications automatiquement",
+        "spell_check": "Correcteur orthographique",
+        "spell_check_desc": "Souligner les erreurs d'orthographe",
+        "security": "Sécurité",
+        "auto_lock": "Verrouillage auto",
+        "auto_lock_desc": "Verrouiller après {{minutes}} minutes d'inactivité",
+        "hour": "heure",
+        "speech": "Synthèse vocale",
+        "accessibility": "Accessibilité",
+        "reduced_motion": "Réduire les animations",
+        "reduced_motion_desc": "Désactiver les effets de mouvement",
+        "keyboard_shortcuts": "Raccourcis clavier"
     },
     "versions": {
         "title": "Historique des versions",

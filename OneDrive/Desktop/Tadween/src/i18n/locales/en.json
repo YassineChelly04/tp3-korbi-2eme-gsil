@@ -27,6 +27,17 @@
         "welcome": "Welcome back!",
         "user": "User"
     },
+    "folders": {
+        "rename": "Rename",
+        "change_color": "Change Color",
+        "new_subfolder": "New Subfolder",
+        "delete": "Delete",
+        "empty": "No folders yet",
+        "empty_hint": "Create a folder to organize your notes.",
+        "note_count": "{{count}} note",
+        "note_count_plural": "{{count}} notes",
+        "drop_hint": "Drop note here"
+    },
     "editor": {
         "title_placeholder": "Note title...",
         "tag_placeholder": "Add tag...",
@@ -37,7 +48,9 @@
         "note_created": "Note created!",
         "pin": "Pin note",
         "unpin": "Unpin note",
-        "delete": "Move to trash"
+        "delete": "Move to trash",
+        "bold": "Bold",
+        "italic": "Italic"
     },
     "empty": {
         "title": "No notes yet",
@@ -64,6 +77,29 @@
         "lock_desc": "Lock app",
         "open_settings": "Open settings",
         "show_shortcuts": "Show shortcuts"
+    },
+    "settings": {
+        "title": "Settings",
+        "language": "Language",
+        "theme": "Theme",
+        "theme_dark": "Dark",
+        "theme_light": "Light",
+        "theme_system": "System",
+        "editor": "Editor",
+        "font_size": "Font Size",
+        "auto_save": "Auto-save",
+        "auto_save_desc": "Save changes automatically",
+        "spell_check": "Spell check",
+        "spell_check_desc": "Underline spelling errors",
+        "security": "Security",
+        "auto_lock": "Auto-lock",
+        "auto_lock_desc": "Lock after {{minutes}} minutes of inactivity",
+        "hour": "hour",
+        "speech": "Speech-to-Text",
+        "accessibility": "Accessibility",
+        "reduced_motion": "Reduce animations",
+        "reduced_motion_desc": "Disable motion effects",
+        "keyboard_shortcuts": "Keyboard Shortcuts"
     },
     "versions": {
         "title": "Version History",
