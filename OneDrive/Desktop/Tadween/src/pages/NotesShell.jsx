@@ -5,50 +5,134 @@ import SettingsPanel from "../components/settings/SettingsPanel";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../hooks/useLanguage";
 import { useUIStore } from "../stores/ui.store";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, Lock, ArrowLeft, FileText } from "lucide-react";
 
-// ── Animated Empty State ─────────────────────────────────────────────
-function EmptyState({ onCreate }) {
-  const { t } = useTranslation();
+// ── Helpers ──────────────────────────────────────────────────────────
+function formatCardDate(dateStr) {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const yyyy = d.getFullYear();
+    return `${dd}.${mm}.${yyyy}`;
+  } catch { return ""; }
+}
+
+function truncate(str, len = 22) {
+  if (!str) return "";
+  return str.length > len ? str.slice(0, len) + "…" : str;
+}
+
+// ── Stagger animation config ────────────────────────────────────────
+const gridContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.05 } },
+};
+const cardVariant = {
+  hidden: { opacity: 0, y: 20, scale: 0.97 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.3, ease: "easeOut" } },
+};
+
+// ── Home Grid View ──────────────────────────────────────────────────
+function HomeGrid({ notes, onSelect, onCreate, t }) {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center gap-6 animate-fade-in"
-      style={{ background: "var(--bg-base)" }}>
-      {/* Illustration */}
-      <div className="relative">
-        <div className="w-24 h-24 rounded-3xl flex items-center justify-center"
-          style={{ background: "var(--bg-elevated)", boxShadow: "var(--shadow-md)" }}>
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" strokeWidth={1.2} style={{ color: "var(--accent)" }}>
-            <path strokeLinecap="round" strokeLinejoin="round"
-              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-        </div>
-        {/* Floating ring */}
-        <div className="absolute inset-0 rounded-3xl"
-          style={{ boxShadow: "0 0 0 8px var(--accent-muted)", animation: "pulse-ring 2.5s ease infinite" }} />
-      </div>
-
-      <div className="text-center space-y-1.5">
-        <p className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
-          {t("empty.title")}
-        </p>
-        <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-          {t("empty.subtitle")}
+    <div className="tw-main-area">
+      {/* Page header */}
+      <div style={{ marginBottom: 32 }}>
+        <h1 style={{
+          fontSize: 28, fontWeight: 800, margin: 0,
+          color: "var(--text-primary)", lineHeight: 1.3,
+        }}>
+          {t("home.title") || "My Notes"}
+        </h1>
+        <p style={{ fontSize: 15, color: "var(--text-muted)", marginTop: 4 }}>
+          {t("home.subtitle") || "All your thoughts, beautifully organized."}
         </p>
       </div>
 
-      <button
-        onClick={onCreate}
-        className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white transition-all"
-        style={{ background: "var(--accent)", boxShadow: "var(--shadow-accent)" }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent-hover)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent)"; e.currentTarget.style.transform = ""; }}
+      {/* Card Grid */}
+      <motion.div
+        className="tw-notes-grid"
+        variants={gridContainer}
+        initial="hidden"
+        animate="visible"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-        </svg>
-        {t("empty.cta")}
-        <span className="kbd ms-1">Ctrl+N</span>
-      </button>
+        {/* New Note card */}
+        <motion.div
+          variants={cardVariant}
+          className="tw-new-note-card"
+          onClick={onCreate}
+          role="button"
+          tabIndex={0}
+          aria-label={t("sidebar.new_note") || "New note"}
+          onKeyDown={(e) => e.key === "Enter" && onCreate()}
+        >
+          <div className="tw-new-note-icon">
+            <Plus size={28} strokeWidth={2} />
+          </div>
+          <span className="tw-new-note-text">
+            {t("sidebar.new_note") || "New note"}
+          </span>
+        </motion.div>
+
+        {/* Note cards */}
+        {notes.map((note) => (
+          <motion.div
+            key={note.id}
+            variants={cardVariant}
+            className="tw-note-card"
+            onClick={() => onSelect(note.id)}
+            role="button"
+            tabIndex={0}
+            aria-label={note.title || t("sidebar.untitled") || "Untitled"}
+            onKeyDown={(e) => e.key === "Enter" && onSelect(note.id)}
+          >
+            <h3 className="tw-note-title">
+              {truncate(note.title || t("sidebar.untitled") || "Untitled")}
+            </h3>
+            <p className="tw-note-preview">
+              {note.preview || t("sidebar.no_content") || "No content"}
+            </p>
+            <div className="tw-note-footer">
+              <span className="tw-note-date">
+                {formatCardDate(note.updated_at || note.created_at)}
+              </span>
+              <span className="tw-note-lock" aria-hidden="true">
+                <Lock size={14} />
+              </span>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+// ── Editor View (with back button) ──────────────────────────────────
+function EditorView({ noteId, isNew, onBack, onMetaChange, onTrash, onSave, t }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
+      {/* Back button bar */}
+      <div style={{ paddingInline: 24, paddingTop: 16, paddingBottom: 0 }}>
+        <button
+          className="tw-back-btn"
+          onClick={onBack}
+          aria-label={t("home.back") || "Back to notes"}
+        >
+          <ArrowLeft size={16} className="icon-directional" />
+          {t("home.back") || "Back to notes"}
+        </button>
+      </div>
+      <NoteEditor
+        key={noteId}
+        noteId={noteId}
+        isNew={isNew}
+        onMetaChange={onMetaChange}
+        onTrash={onTrash}
+        onSave={onSave}
+      />
     </div>
   );
 }
@@ -103,13 +187,18 @@ function NotesShell({ onLock }) {
     await loadNotes();
     setActiveNoteId(created.id);
     setIsNewNote(true);
-    // Switch back to "all" so new note is visible
     if (activeFilter !== "all") setActiveFilter("all");
   };
 
   const handleSelectNote = (id) => {
     setActiveNoteId(id);
     setIsNewNote(false);
+  };
+
+  const handleBackToHome = () => {
+    setActiveNoteId(null);
+    setIsNewNote(false);
+    loadNotes(); // refresh grid after editing
   };
 
   const handleTrash = async (id) => {
@@ -158,7 +247,7 @@ function NotesShell({ onLock }) {
     : notes;
 
   return (
-    <div className="h-screen w-screen flex overflow-hidden" style={{ background: "var(--bg-base)" }}>
+    <div className="tw-dash-root">
       <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       <NotesSidebar
         notes={filteredNotes}
@@ -178,19 +267,25 @@ function NotesShell({ onLock }) {
         onCreateFolder={handleCreateFolder}
       />
 
-      {/* ── Main content ── */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      {/* ── Main content: Home grid or Editor ── */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
         {activeNoteId ? (
-          <NoteEditor
-            key={activeNoteId}
+          <EditorView
             noteId={activeNoteId}
             isNew={isNewNote}
+            onBack={handleBackToHome}
             onMetaChange={(patch) => handleUpdateMeta(activeNoteId, patch)}
             onTrash={() => handleTrash(activeNoteId)}
             onSave={loadNotes}
+            t={t}
           />
         ) : (
-          <EmptyState onCreate={handleCreateNote} />
+          <HomeGrid
+            notes={filteredNotes}
+            onSelect={handleSelectNote}
+            onCreate={handleCreateNote}
+            t={t}
+          />
         )}
       </div>
     </div>
