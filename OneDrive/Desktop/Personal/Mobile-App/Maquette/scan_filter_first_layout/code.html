@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Precision Scan - Live Interface</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-high": "#2a2a2a",
+                        "on-primary-container": "#002b4f",
+                        "on-tertiary-fixed-variant": "#693c00",
+                        "on-tertiary-fixed": "#2c1600",
+                        "surface-dim": "#131313",
+                        "on-surface-variant": "#c0c7d3",
+                        "on-primary": "#00325a",
+                        "surface-container-low": "#1c1b1b",
+                        "outline-variant": "#414751",
+                        "surface-container-highest": "#353534",
+                        "secondary-container": "#314a6a",
+                        "on-error": "#690005",
+                        "primary-fixed": "#d2e4ff",
+                        "tertiary": "#ffb86f",
+                        "secondary-fixed-dim": "#aec8ee",
+                        "background": "#131313",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#3a3939",
+                        "on-primary-fixed-variant": "#004880",
+                        "primary-container": "#4494e7",
+                        "on-secondary": "#163250",
+                        "secondary-fixed": "#d2e4ff",
+                        "tertiary-fixed-dim": "#ffb86f",
+                        "on-tertiary": "#492900",
+                        "primary-fixed-dim": "#a1c9ff",
+                        "on-secondary-fixed-variant": "#2f4867",
+                        "inverse-primary": "#0060a8",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-surface": "#e5e2e1",
+                        "error-container": "#93000a",
+                        "on-secondary-fixed": "#001c38",
+                        "on-primary-fixed": "#001c38",
+                        "surface-variant": "#353534",
+                        "primary": "#a1c9ff",
+                        "on-tertiary-container": "#402300",
+                        "secondary": "#aec8ee",
+                        "on-background": "#e5e2e1",
+                        "tertiary-container": "#cf7e11",
+                        "outline": "#8b919d",
+                        "tertiary-fixed": "#ffdcbd",
+                        "surface-tint": "#a1c9ff",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container": "#201f1f",
+                        "on-secondary-container": "#a0badf",
+                        "surface": "#131313",
+                        "inverse-on-surface": "#313030",
+                        "on-error-container": "#ffdad6"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scanner-mask {
+            clip-path: polygon(15% 10%, 85% 12%, 90% 88%, 10% 85%);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body select-none overflow-hidden">
+<!-- Top Navigation Shell -->
+<header class="bg-[#131313] dark:bg-[#131313] flex justify-between items-center px-4 h-16 w-full z-50 fixed top-0 border-b border-white/10 dark:border-white/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#a1c9ff]" data-icon="menu_open">menu_open</span>
+<h1 class="text-lg font-bold tracking-tighter text-[#a1c9ff] dark:text-[#a1c9ff] font-headline">PRECISION SCAN</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-primary/10 px-3 py-1 flex items-center gap-2 border border-primary/20">
+<span class="w-2 h-2 rounded-full bg-[#4ade80] animate-pulse"></span>
+<span class="font-label text-[10px] font-bold tracking-widest text-primary uppercase">AUTO-READY</span>
+</div>
+<span class="material-symbols-outlined text-[#a1c9ff]" data-icon="settings">settings</span>
+</div>
+</header>
+<!-- Main Viewfinder Canvas -->
+<main class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+<!-- Full-bleed Camera Feed -->
+<div class="absolute inset-0 z-0">
+<img alt="Document scanning view" class="w-full h-full object-cover grayscale-[0.2] brightness-[0.4]" data-alt="high-angle close-up of a textured white paper document on a dark slate surface with professional sharp studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgEka4q2hsYk78wYCfH_3-15iumUGzpN6mpkNsiTCn4eNIO72eIC0YlgpxUBfp6tUukDlL2ZK72dVXjXeNQ3SNbbl9Rupas15fDMdRSgh774LdPbX-tDVARdH_zuyUUlkMFD8Mo6dbq1jPV3CtFW2gZoUOc75uMAAjmKEmMWYS1a_7DRc__-6BVCtmIh3roTFOeWILuFfgCX3U3uNdKRFYdW838xBbRZ4NtXcfwlkyF41KBnuoTJb_zdE51kmJMefTAfWlCCjim65b"/>
+</div>
+<!-- Scanning HUD Overlay -->
+<div class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+<!-- Edge Detection Polygon -->
+<div class="w-[80%] h-[70%] border-2 border-primary-container scanner-mask relative flex items-center justify-center">
+<!-- Corner Handles -->
+<div class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full border-2 border-surface"></div>
+<div class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full border-2 border-surface"></div>
+<div class="absolute bottom-0 left-0 -translate-x-1/2 translate-y-1/2 w-3 h-3 bg-primary rounded-full border-2 border-surface"></div>
+<div class="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-3 h-3 bg-primary rounded-full border-2 border-surface"></div>
+<!-- Real-time Metadata Badges -->
+<div class="absolute top-8 left-8 flex flex-col gap-2">
+<div class="bg-surface-container-highest/80 backdrop-blur-md px-2 py-1 rounded-lg border border-white/5">
+<span class="font-label text-[10px] text-primary">CONFIDENCE: 98.4%</span>
+</div>
+<div class="bg-surface-container-highest/80 backdrop-blur-md px-2 py-1 rounded-lg border border-white/5">
+<span class="font-label text-[10px] text-white/70">ISO 400 | 1/120s</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side Camera Controls -->
+<div class="absolute right-6 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-6">
+<button class="flex flex-col items-center gap-1 group">
+<div class="w-12 h-12 flex items-center justify-center bg-surface-container-high/40 backdrop-blur-lg border border-white/10 group-active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-on-surface" data-icon="flash_auto">flash_auto</span>
+</div>
+<span class="font-label text-[9px] tracking-widest text-white/40 uppercase">FLASH</span>
+</button>
+<button class="flex flex-col items-center gap-1 group">
+<div class="w-12 h-12 flex items-center justify-center bg-surface-container-high/40 backdrop-blur-lg border border-white/10 group-active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-on-surface" data-icon="aspect_ratio">aspect_ratio</span>
+</div>
+<span class="font-label text-[9px] tracking-widest text-white/40 uppercase">A4:RATIO</span>
+</button>
+<button class="flex flex-col items-center gap-1 group">
+<div class="w-12 h-12 flex items-center justify-center bg-surface-container-high/40 backdrop-blur-lg border border-white/10 group-active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-on-surface" data-icon="layers">layers</span>
+<span class="absolute -top-1 -right-1 bg-primary text-on-primary-container text-[10px] font-bold px-1.5 py-0.5 rounded-full">12</span>
+</div>
+<span class="font-label text-[9px] tracking-widest text-white/40 uppercase">BATCH</span>
+</button>
+</div>
+<!-- Bottom Controls Area -->
+<div class="absolute bottom-24 w-full z-20 flex flex-col items-center gap-6">
+<!-- Filter Strip (Swipeable Simulator) -->
+<div class="w-full flex justify-center gap-4 overflow-x-auto hide-scrollbar px-10 pb-2">
+<button class="flex flex-col items-center gap-2 opacity-40 shrink-0">
+<div class="w-14 h-14 bg-surface-container-highest border border-white/10 overflow-hidden">
+<img class="w-full h-full object-cover grayscale" data-alt="B&amp;W document preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_amlo9QsLdTs2VX1KURlKKC3LhhS_VbNhWXW491YDwj4H_TQS_O9LdeGuQCq-OoCVsu4F9tXbw5lDjjS3iBot44-muKIprcQE_D4c4HbjUNOnjorkVqHdiM17k5SGMf7dMNXX8XRzAntLUNVekyfj7UM3F_Le683OI5cOjYIzx0K494FHvtwatilqrqLyJvDhysz0sEPVm6wclDo03JIQiQhAWHWSWXFsJvcIzzSVhMVBmQLZQfrXwfsdZhJFN7OuvutAx0k4NUXB"/>
+</div>
+<span class="font-label text-[8px] tracking-widest uppercase">Grayscale</span>
+</button>
+<button class="flex flex-col items-center gap-2 opacity-40 shrink-0">
+<div class="w-14 h-14 bg-surface-container-highest border border-white/10 overflow-hidden">
+<img class="w-full h-full object-cover contrast-150" data-alt="High contrast document preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXMUfaM531AoEZ8yLcYmLtWdtZzZu_mehMK_cyaOdMdunUg8L-wKdW0lAvN6YKSp0VD0BfBjGLO4UaN275Vvn2rvKOw56bFb6sX2g64L6oUjY-cuPlbk8Nqn8bFY3UWl8t42HDY74beB6xqXFHQG8Iihjskbi3CnUE0BrGm5hmDWVr8GFA839gpst5YANkDDpDhNa9UPLp_tyLegXtd9qiFJwMT8FuFsQEMcSxFlrg_2oaKO62TMCEi7oIqS_nik_c6rqwesbGGwIb"/>
+</div>
+<span class="font-label text-[8px] tracking-widest uppercase">B&amp;W</span>
+</button>
+<button class="flex flex-col items-center gap-2 shrink-0">
+<div class="w-14 h-14 bg-surface-container-highest border-2 border-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Original document preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsvmf-A4tCE0DkKstSlgUf_mHbvslCKQ7FuFLFnQ59mRWleGyTHkMROvfN-u-ITpnbapcaPjKLhhatih-Ly2FbHqJ05st7YIABZfjZUYvB_af58_6Lk7xh4k1sn_31ErVqo32oZWSS-GnTPhaVSIPBcQidCldE9HcvGpvKusGkAtEZm5tr69XyLsxGPDWNjKJSUHXXNqIn2lTECfaSvqsmWccWBOYi3fJFI7Q002JSZhQox2pnG9jQlMzBoy7A35frlkh_vA_Vr3cb"/>
+</div>
+<span class="font-label text-[8px] tracking-widest text-primary font-bold uppercase">Original</span>
+</button>
+<button class="flex flex-col items-center gap-2 opacity-40 shrink-0">
+<div class="w-14 h-14 bg-surface-container-highest border border-white/10 overflow-hidden">
+<img class="w-full h-full object-cover saturate-150" data-alt="Enhanced document preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBam4Ti-gIzgJePE2ae3w7_1r9JxQ3iZeOXP2Vyx_Y3x9lb2taqYC-R0el030TRfsCva6dYd39nUsayT7etw-_4QGMMInqDPzhsnoNhX5h0_xq-hvjB3mPQ-1DsaNfNonXP45xU-2rUndYXm5TLc35APacvbg46VobkvDDIY_8X5oof76mEIbD2p6bXPkV81juWioun0wXM74EAFRtjghmbyEmzlDxhQVXcYokzYJnn3MAMC8ZdRLY0ELGw97X4LH2Kd7-bBznVICzD"/>
+</div>
+<span class="font-label text-[8px] tracking-widest uppercase">Enhanced</span>
+</button>
+<button class="flex flex-col items-center gap-2 opacity-40 shrink-0">
+<div class="w-14 h-14 bg-surface-container-highest border border-white/10 overflow-hidden">
+<img class="w-full h-full object-cover invert" data-alt="Inverted document preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeq_yuXYdTywNVzdbb1tCTZ4CpwTdEq3ZmXIm1NheWmEFoC-T0ZnCN6wKu1NzRG-svUckjMkhAT82TQhAkTQFK6ncYrSqC4ng6euFWpGK6ZHkevJIxJKO-4Ku1pUmPDSWerGXr26XTl12_g9kGm1fTScmQnw74-P1xHQjfKpjEQ2Cc1uL0rSxEH12246qiM80PAGRkmXGf6cLqjjff4jJYctI7zmA2_LF6eq6X7YMGn7kRCyL0EmHg4HggTYfg3t6R3VnjuiZG-W2g"/>
+</div>
+<span class="font-label text-[8px] tracking-widest uppercase">Inverted</span>
+</button>
+</div>
+<!-- Shutter Row -->
+<div class="flex items-center gap-12">
+<button class="w-14 h-14 flex items-center justify-center bg-surface-container-high/40 backdrop-blur-md border border-white/10 group active:scale-95 transition-all">
+<img class="w-10 h-10 object-cover opacity-60" data-alt="Small thumbnail of recently scanned documents in a library setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgJ6LTckNJndkKMlUPWRlPSA1YNTZ2OLPJMH4QLxyDrXVBoGccdGPas3EaSxHQ7xmu1J9pabWGJYR7tGXP7ztM0D0FoIVk0EGuNx8oUfDy4_xnCdnoI7skldcEUxrDVwdH8NoxqCWvC7PJ8auYMAnJB3iF6YUWbvzeCcPVP2Vy83WnSggV2saIA5UhzOqD27oaXY7I90zmDmr_Pi7hJqwHXeefWHFdApizNRZHpy-e0nYraoNk2XOVCNg9xmjvbKmUbB0ySgPd9Ngz"/>
+</button>
+<button class="relative w-20 h-20 flex items-center justify-center active:scale-90 transition-transform">
+<div class="absolute inset-0 border-4 border-primary/30 rounded-full"></div>
+<div class="w-16 h-16 bg-white rounded-full border-4 border-surface shadow-[0_0_20px_rgba(161,201,255,0.4)]"></div>
+</button>
+<button class="w-14 h-14 flex items-center justify-center bg-surface-container-high/40 backdrop-blur-md border border-white/10 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-white/60" data-icon="photo_library">photo_library</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center bg-[#131313] border-t border-white/5 dark:border-white/5 z-50">
+<!-- SCAN (Active) -->
+<a class="flex flex-col items-center justify-center text-[#a1c9ff] border-l-2 border-[#a1c9ff] bg-[#2a2a2a] px-6 py-2 transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="view_in_ar" style="font-variation-settings: 'FILL' 1;">view_in_ar</span>
+<span class="text-[10px] uppercase tracking-widest font-medium font-label mt-1">SCAN</span>
+</a>
+<!-- DOCS (Inactive) -->
+<a class="flex flex-col items-center justify-center text-gray-500 px-6 py-2 hover:text-white transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
+<span class="text-[10px] uppercase tracking-widest font-medium font-label mt-1">DOCS</span>
+</a>
+<!-- SETTINGS (Inactive) -->
+<a class="flex flex-col items-center justify-center text-gray-500 px-6 py-2 hover:text-white transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+<span class="text-[10px] uppercase tracking-widest font-medium font-label mt-1">SETTINGS</span>
+</a>
+</nav>
+<!-- Side Calibration Bar (Visual Detail) -->
+<div class="fixed left-0 top-1/2 -translate-y-1/2 h-48 w-1.5 flex flex-col justify-between items-center z-20">
+<div class="w-full h-0.5 bg-primary/40"></div>
+<div class="w-full h-0.5 bg-primary/20"></div>
+<div class="w-full h-0.5 bg-primary"></div>
+<div class="w-full h-0.5 bg-primary/20"></div>
+<div class="w-full h-0.5 bg-primary/40"></div>
+</div>
+</body></html>

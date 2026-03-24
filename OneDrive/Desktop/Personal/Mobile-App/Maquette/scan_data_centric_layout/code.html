@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Precision Scan - Live Interface</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-high": "#2a2a2a",
+                        "on-primary-container": "#002b4f",
+                        "on-tertiary-fixed-variant": "#693c00",
+                        "on-tertiary-fixed": "#2c1600",
+                        "surface-dim": "#131313",
+                        "on-surface-variant": "#c0c7d3",
+                        "on-primary": "#00325a",
+                        "surface-container-low": "#1c1b1b",
+                        "outline-variant": "#414751",
+                        "surface-container-highest": "#353534",
+                        "secondary-container": "#314a6a",
+                        "on-error": "#690005",
+                        "primary-fixed": "#d2e4ff",
+                        "tertiary": "#ffb86f",
+                        "secondary-fixed-dim": "#aec8ee",
+                        "background": "#131313",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#3a3939",
+                        "on-primary-fixed-variant": "#004880",
+                        "primary-container": "#4494e7",
+                        "on-secondary": "#163250",
+                        "secondary-fixed": "#d2e4ff",
+                        "tertiary-fixed-dim": "#ffb86f",
+                        "on-tertiary": "#492900",
+                        "primary-fixed-dim": "#a1c9ff",
+                        "on-secondary-fixed-variant": "#2f4867",
+                        "inverse-primary": "#0060a8",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-surface": "#e5e2e1",
+                        "error-container": "#93000a",
+                        "on-secondary-fixed": "#001c38",
+                        "on-primary-fixed": "#001c38",
+                        "surface-variant": "#353534",
+                        "primary": "#a1c9ff",
+                        "on-tertiary-container": "#402300",
+                        "secondary": "#aec8ee",
+                        "on-background": "#e5e2e1",
+                        "tertiary-container": "#cf7e11",
+                        "outline": "#8b919d",
+                        "tertiary-fixed": "#ffdcbd",
+                        "surface-tint": "#a1c9ff",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container": "#201f1f",
+                        "on-secondary-container": "#a0badf",
+                        "surface": "#131313",
+                        "inverse-on-surface": "#313030",
+                        "on-error-container": "#ffdad6"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scanner-mask {
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 15% 20%, 15% 75%, 85% 75%, 85% 20%, 15% 20%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body select-none overflow-hidden h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-[#131313] dark:bg-[#131313] flex justify-between items-center px-4 h-16 w-full z-50 border-b border-white/10 dark:border-white/10 docked full-width top-0">
+<div class="flex items-center gap-4">
+<button class="text-[#a1c9ff] dark:text-[#a1c9ff] hover:bg-[#2a2a2a] dark:hover:bg-[#2a2a2a] transition-colors p-2 scale-95 active:duration-75">
+<span class="material-symbols-outlined" data-icon="menu_open">menu_open</span>
+</button>
+<h1 class="text-lg font-bold tracking-tighter text-[#a1c9ff] dark:text-[#a1c9ff] font-headline uppercase">PRECISION SCAN</h1>
+</div>
+<div class="flex items-center gap-2">
+<!-- Format Selector -->
+<div class="hidden md:flex bg-surface-container-high rounded-lg p-1 border border-outline-variant/20">
+<button class="px-3 py-1 text-[10px] font-label font-bold text-primary bg-surface-container-highest rounded-sm">AUTO</button>
+<button class="px-3 py-1 text-[10px] font-label text-outline hover:text-on-surface">A4</button>
+<button class="px-3 py-1 text-[10px] font-label text-outline hover:text-on-surface">LETTER</button>
+</div>
+<button class="text-[#a1c9ff] dark:text-[#a1c9ff] hover:bg-[#2a2a2a] dark:hover:bg-[#2a2a2a] transition-colors p-2 scale-95 active:duration-75">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Viewfinder -->
+<main class="relative flex-1 bg-black overflow-hidden flex flex-col items-center justify-center">
+<!-- Full Bleed Camera Feed Placeholder -->
+<div class="absolute inset-0 z-0">
+<img alt="Document Viewfinder" class="w-full h-full object-cover opacity-60 grayscale-[0.3]" data-alt="Top down view of a technical architectural drawing paper on a dark slate desk with dramatic architectural lighting and sharp shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxUoboiZnmZqm7b7tQlJG63gskuOjdGAenUEtwVZhwJ8sB45Rjj_i3TKtygiQfAIr1IcZvOzzBZzxFoM9KTPe_zTaHoGdNGVL-uWvqM4zb-TcvzhWoJp5d69k-XMFYuhy3rLL7M7ZAkgGvfKAjwzgYLvlz-9IZRY5uZP1wCSXdkIAuHCVYBu7kZAHTSppzMruk5QMYbYrZFWvE5rkZ4yCRe1h234N1cDvCC5R0F_W8T8Iwij0a8GcDB2LRdDV1vtJlERFv2ssv5BWh"/>
+<!-- Tonal Stepping Gradient Overlays -->
+<div class="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/60"></div>
+</div>
+<!-- Scanner Overlay -->
+<div class="relative z-10 w-full h-full flex items-center justify-center pointer-events-none">
+<!-- Edge Detection Polygon -->
+<div class="relative w-4/5 h-3/5 border-2 border-primary/40 flex items-center justify-center">
+<!-- Corner Handles -->
+<div class="absolute -top-1.5 -left-1.5 w-3 h-3 bg-primary rounded-full border-2 border-surface shadow-[0_0_10px_rgba(161,201,255,0.5)]"></div>
+<div class="absolute -top-1.5 -right-1.5 w-3 h-3 bg-primary rounded-full border-2 border-surface shadow-[0_0_10px_rgba(161,201,255,0.5)]"></div>
+<div class="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-primary rounded-full border-2 border-surface shadow-[0_0_10px_rgba(161,201,255,0.5)]"></div>
+<div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-primary rounded-full border-2 border-surface shadow-[0_0_10px_rgba(161,201,255,0.5)]"></div>
+<!-- Status Feedback -->
+<div class="absolute top-8 flex items-center gap-2 bg-tertiary-container/20 backdrop-blur-md border border-tertiary/30 px-4 py-2 rounded-lg">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="text-tertiary font-label text-xs font-bold tracking-widest uppercase">Adjusting...</span>
+</div>
+<!-- Real-time Metadata Badges -->
+<div class="absolute bottom-4 left-4 flex flex-col gap-2">
+<div class="bg-surface-container-highest px-2 py-1 rounded-sm border border-outline-variant/10">
+<span class="text-[9px] font-label text-outline uppercase block leading-tight">ISO</span>
+<span class="text-xs font-label text-on-surface font-bold">400</span>
+</div>
+<div class="bg-surface-container-highest px-2 py-1 rounded-sm border border-outline-variant/10">
+<span class="text-[9px] font-label text-outline uppercase block leading-tight">DIST</span>
+<span class="text-xs font-label text-on-surface font-bold">32.4cm</span>
+</div>
+</div>
+<!-- OCR Confidence -->
+<div class="absolute bottom-4 right-4 bg-primary/10 backdrop-blur-md border border-primary/20 px-3 py-1 rounded-sm">
+<span class="text-[10px] font-label text-primary font-bold">OCR: 98.2%</span>
+</div>
+</div>
+</div>
+<!-- Camera Controls & Recent Captures Overlay -->
+<div class="absolute bottom-24 w-full px-6 flex items-center justify-between z-20">
+<!-- Recent Thumbnails -->
+<div class="flex items-center gap-2">
+<div class="relative group cursor-pointer">
+<div class="w-12 h-12 bg-surface-container-high border border-outline-variant/30 rounded-lg overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-outline" data-icon="photo_library">photo_library</span>
+</div>
+</div>
+<div class="flex -space-x-4">
+<div class="w-10 h-10 border-2 border-surface rounded-lg overflow-hidden z-30">
+<img class="w-full h-full object-cover" data-alt="Close up of a scanned page showing clean black text on white paper background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjPTR1DTkZF6srvilXV9EUnvvUBbrL3XgsqnNIJST-VRPirGKJ8Hu0-V8fOpiU2CR0pjdfVW8KGFe1W8THRH9xHwrGsIcsna02IeI55PcV6k5Cz0keT-skzHi_8iXHaigjVVKpgMPvdChJd_vaG8k6QGKLgMOq8ptauuadgOkbCIgljUsSql_ZxFg7bx7k0QUCYOiEq0bDA9si26uRWfZBpz5RuhLpfSOQVLuNSemBYF2LpqlpBfOHePkNMVDHgTXAZw_3zkXcCi59"/>
+</div>
+<div class="w-10 h-10 border-2 border-surface rounded-lg overflow-hidden z-20">
+<img class="w-full h-full object-cover" data-alt="Technical drawing blueprint scanned with blue lines and professional grids" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiy90Qlf9_toC0GSxJaqdNN3aAOL05GEfZ0mB6uZISdyhk83U5LUC2lOBhhfBvGVqQQulThxpOzaB6DuecSQiRjFEzmozHSpNKLcraXvY5ilS9gdWZRlQMOmXotJQEfXuONrRCaXm9TRHCROSszgBuAFcus7tB5mCs4peakV5XI0lA_vbIxR5Hm9jgaHJ9UVKi7_K60rccXdgHEXqbatWYAkMO60oL7xkYsZjY1kdFFSCRYrf-ArF6u_Q1rouaNVp930ogO-v_CBT4"/>
+</div>
+<div class="w-10 h-10 border-2 border-surface rounded-lg overflow-hidden z-10">
+<img class="w-full h-full object-cover" data-alt="White business card with minimalist typography scanned on a dark surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6fwUhDSmBCpWhJvrbA2O9ow4YB-qBPXcNBzbCitCS39VsSCa220j2kLMibmLpUPuCZ9O0n-qT3EptLyyAFJIjA6jKuIbmHcCHnUXab9iwJLt2daAYQAc66MGvLln5v30S6Tvx0fj2XzRIb1424bsA_5ACGUAbjRMXawrwjtwjCTaN1SQ-9_EPQFKa1ii6ABLYOEHGYB3QaCHRe1UESEBUhQNGcSUDd4LJ43V0J7n5GdX1EFV03uwAGz57h9OWmHkqE3YiYyIheXHE"/>
+</div>
+</div>
+</div>
+<!-- Main Shutter Button -->
+<div class="relative flex items-center justify-center">
+<!-- Progress Ring -->
+<svg class="w-24 h-24 transform -rotate-90">
+<circle class="text-outline-variant/20" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="2"></circle>
+<circle class="text-primary" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="60" stroke-width="3"></circle>
+</svg>
+<button class="absolute w-16 h-16 bg-white rounded-full border-4 border-surface shadow-xl active:scale-90 transition-transform flex items-center justify-center">
+<div class="w-14 h-14 rounded-full border border-black/10"></div>
+</button>
+</div>
+<!-- Flash Toggle -->
+<button class="w-12 h-12 bg-surface-container-high/40 backdrop-blur-xl border border-white/10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="flash_auto">flash_auto</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center bg-[#131313] border-t border-white/5 dark:border-white/5 z-50">
+<!-- SCAN (Active) -->
+<a class="flex flex-col items-center justify-center text-[#a1c9ff] border-l-2 border-[#a1c9ff] bg-[#2a2a2a] px-6 py-2 transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="view_in_ar" style="font-variation-settings: 'FILL' 1;">view_in_ar</span>
+<span class="text-[10px] uppercase tracking-widest font-medium font-label mt-1">SCAN</span>
+</a>
+<!-- DOCS (Inactive) -->
+<a class="flex flex-col items-center justify-center text-gray-500 px-6 py-2 transition-all duration-150 ease-in-out hover:text-white dark:hover:text-white" href="#">
+<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
+<span class="text-[10px] uppercase tracking-widest font-medium font-label mt-1">DOCS</span>
+</a>
+<!-- SETTINGS (Inactive) -->
+<a class="flex flex-col items-center justify-center text-gray-500 px-6 py-2 transition-all duration-150 ease-in-out hover:text-white dark:hover:text-white" href="#">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+<span class="text-[10px] uppercase tracking-widest font-medium font-label mt-1">SETTINGS</span>
+</a>
+</nav>
+<!-- FAB Suppression: Screen is a focused capture journey, FAB is suppressed as per guidelines -->
+</body></html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Precision Scan - Live Interface</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-high": "#2a2a2a",
+                        "on-primary-container": "#002b4f",
+                        "on-tertiary-fixed-variant": "#693c00",
+                        "on-tertiary-fixed": "#2c1600",
+                        "surface-dim": "#131313",
+                        "on-surface-variant": "#c0c7d3",
+                        "on-primary": "#00325a",
+                        "surface-container-low": "#1c1b1b",
+                        "outline-variant": "#414751",
+                        "surface-container-highest": "#353534",
+                        "secondary-container": "#314a6a",
+                        "on-error": "#690005",
+                        "primary-fixed": "#d2e4ff",
+                        "tertiary": "#ffb86f",
+                        "secondary-fixed-dim": "#aec8ee",
+                        "background": "#131313",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#3a3939",
+                        "on-primary-fixed-variant": "#004880",
+                        "primary-container": "#4494e7",
+                        "on-secondary": "#163250",
+                        "secondary-fixed": "#d2e4ff",
+                        "tertiary-fixed-dim": "#ffb86f",
+                        "on-tertiary": "#492900",
+                        "primary-fixed-dim": "#a1c9ff",
+                        "on-secondary-fixed-variant": "#2f4867",
+                        "inverse-primary": "#0060a8",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-surface": "#e5e2e1",
+                        "error-container": "#93000a",
+                        "on-secondary-fixed": "#001c38",
+                        "on-primary-fixed": "#001c38",
+                        "surface-variant": "#353534",
+                        "primary": "#a1c9ff",
+                        "on-tertiary-container": "#402300",
+                        "secondary": "#aec8ee",
+                        "on-background": "#e5e2e1",
+                        "tertiary-container": "#cf7e11",
+                        "outline": "#8b919d",
+                        "tertiary-fixed": "#ffdcbd",
+                        "surface-tint": "#a1c9ff",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container": "#201f1f",
+                        "on-secondary-container": "#a0badf",
+                        "surface": "#131313",
+                        "inverse-on-surface": "#313030",
+                        "on-error-container": "#ffdad6"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .scanner-polygon {
+            clip-path: polygon(15% 10%, 85% 15%, 90% 85%, 10% 80%);
+        }
+        .glass-overlay {
+            backdrop-filter: blur(20px);
+            background-color: rgba(161, 201, 255, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body overflow-hidden h-screen w-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-4 h-16 w-full z-50 bg-[#131313] border-b border-white/10 dark:border-white/10 fixed top-0">
+<div class="flex items-center gap-3">
+<button class="text-[#a1c9ff] p-2 hover:bg-[#2a2a2a] transition-colors active:scale-95 duration-75">
+<span class="material-symbols-outlined" data-icon="menu_open">menu_open</span>
+</button>
+<h1 class="text-lg font-bold tracking-tighter text-[#a1c9ff] font-headline">PRECISION SCAN</h1>
+</div>
+<div class="flex items-center gap-1">
+<button class="text-[#a1c9ff] p-2 hover:bg-[#2a2a2a] transition-colors active:scale-95 duration-75">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Scanner Canvas -->
+<main class="flex-grow relative mt-16 mb-20 overflow-hidden bg-surface-container-lowest">
+<!-- Full-bleed Camera Feed Placeholder -->
+<div class="absolute inset-0 z-0">
+<img alt="Document on dark surface" class="w-full h-full object-cover opacity-60 grayscale-[0.3]" data-alt="Top-down view of a textured paper document laying on a dark architectural drawing board with soft moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC454EI4n0kW0Z-17tR9iX43RUe2kIlhiOEBLfyl7UQa4_1z71DY1LdibMBrkhDio-Ry4PHqexGlvPclSOpyXFVbLAZcpJTZmhBaUKee5r4A8pQ85QhpOt7ubsU8NhJcnY_A1kl2qsFWm4VwwG2dRwjEzh1C9d9jCzwGZgBTlQcN4zAtJMcfcAtA5n4EgAs2YpSi_WbtnWNdYqKtI9A0yWG8RyoTioiYcgIvuV6B9f-Aq4vprVvGbueOAIkaehvS9-MYrqj_mSVTA5d"/>
+</div>
+<!-- Scanner Viewfinder UI -->
+<div class="absolute inset-0 z-10 p-8 flex flex-col">
+<!-- Contextual Controls Overlay (Top) -->
+<div class="flex justify-between items-start w-full">
+<div class="flex flex-col gap-2">
+<div class="glass-overlay p-2 px-3 rounded-lg border border-primary/20 flex items-center gap-4">
+<button class="flex items-center gap-1 text-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span>
+<span class="font-label text-[10px] tracking-widest font-medium">AUTO</span>
+</button>
+<div class="w-px h-3 bg-white/10"></div>
+<button class="flex items-center gap-1 text-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="aspect_ratio">aspect_ratio</span>
+<span class="font-label text-[10px] tracking-widest font-medium uppercase">A4</span>
+</button>
+</div>
+</div>
+<div class="bg-surface-container-highest/80 px-4 py-2 rounded-lg border border-outline-variant/30 backdrop-blur-md">
+<span class="font-label text-xs tracking-[0.2em] font-bold text-primary">BATCH: 03</span>
+</div>
+</div>
+<!-- Edge Detection Visualization -->
+<div class="flex-grow relative flex items-center justify-center">
+<!-- Main Polygon Stroke -->
+<div class="absolute scanner-polygon inset-10 border-2 border-primary/80 transition-all duration-500"></div>
+<!-- Corner Handles -->
+<div class="absolute w-3 h-3 bg-primary rounded-full border-2 border-white scanner-handle shadow-[0_0_10px_rgba(161,201,255,0.5)]" style="top: 10%; left: 15%;"></div>
+<div class="absolute w-3 h-3 bg-primary rounded-full border-2 border-white scanner-handle shadow-[0_0_10px_rgba(161,201,255,0.5)]" style="top: 15%; right: 15%;"></div>
+<div class="absolute w-3 h-3 bg-primary rounded-full border-2 border-white scanner-handle shadow-[0_0_10px_rgba(161,201,255,0.5)]" style="bottom: 15%; right: 10%;"></div>
+<div class="absolute w-3 h-3 bg-primary rounded-full border-2 border-white scanner-handle shadow-[0_0_10px_rgba(161,201,255,0.5)]" style="bottom: 20%; left: 10%;"></div>
+<!-- Detection Metadata -->
+<div class="absolute top-[12%] left-[20%] bg-primary-container text-on-primary-container px-2 py-0.5 rounded-sm">
+<span class="font-label text-[9px] font-bold tracking-tighter uppercase">Confidence: 98.4%</span>
+</div>
+</div>
+<!-- Bottom Action Controls -->
+<div class="w-full flex justify-between items-center px-4 pb-4">
+<!-- Gallery Shortcut -->
+<div class="relative group cursor-pointer">
+<div class="w-12 h-12 bg-surface-container-high rounded-lg border border-outline-variant overflow-hidden hover:border-primary transition-colors">
+<img alt="Recent scan" class="w-full h-full object-cover opacity-80" data-alt="Close up thumbnail of a scanned document portrait with sharp details" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnfmNgW_QCcP33ENaRlYqJLesOF2YVTRsl1qpBNet0EVYcj6xT_PwAtYZ02S02WvnpbIPgkNi2mhcsS4bnchLqrKAdyETAeQa_zPi9losDL519bzI1iT_h4oiDMPVMq9ulgtOwuB1MIsMc-gN0dB9gS-zuL3vDkLINu-0jyWZNHYAos0xsEg_17T9BkDQ14nJ-VnSMhyhSjSwiTxOAmiTMEBtHi4qo-CUzeSD54xfsF7eUWW1Y706-Qm3wbDCmlNvd7n9Sc3Fqkan4"/>
+</div>
+<span class="absolute -top-1 -right-1 bg-primary text-on-primary-container text-[8px] font-bold w-4 h-4 flex items-center justify-center rounded-full">3</span>
+</div>
+<!-- Shutter Mechanism -->
+<div class="relative flex items-center justify-center">
+<!-- Progress Ring (SVG) -->
+<svg class="absolute w-24 h-24 -rotate-90">
+<circle class="text-white/10" cx="48" cy="48" fill="transparent" r="44" stroke="currentColor" stroke-width="2"></circle>
+<circle class="text-primary transition-all duration-1000" cx="48" cy="48" fill="transparent" r="44" stroke="currentColor" stroke-dasharray="276" stroke-dashoffset="80" stroke-width="4"></circle>
+</svg>
+<!-- Main Button -->
+<button class="w-16 h-16 bg-white rounded-full flex items-center justify-center border-4 border-surface shadow-xl active:scale-90 transition-transform z-20">
+<div class="w-12 h-12 rounded-full border-2 border-black/10"></div>
+</button>
+</div>
+<!-- Filters Shortcut -->
+<button class="w-12 h-12 flex items-center justify-center bg-surface-container-high rounded-lg border border-outline-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center bg-[#131313] border-t border-white/5 dark:border-white/5 z-50">
+<!-- SCAN (Active) -->
+<a class="flex flex-col items-center justify-center text-[#a1c9ff] border-l-2 border-[#a1c9ff] bg-[#2a2a2a] px-6 py-2 transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="view_in_ar" style="font-variation-settings: 'FILL' 1;">view_in_ar</span>
+<span class="text-[10px] uppercase tracking-widest font-medium font-label mt-1">SCAN</span>
+</a>
+<!-- DOCS -->
+<a class="flex flex-col items-center justify-center text-gray-500 px-6 py-2 hover:text-white transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
+<span class="text-[10px] uppercase tracking-widest font-medium font-label mt-1">DOCS</span>
+</a>
+<!-- SETTINGS -->
+<a class="flex flex-col items-center justify-center text-gray-500 px-6 py-2 hover:text-white transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+<span class="text-[10px] uppercase tracking-widest font-medium font-label mt-1">SETTINGS</span>
+</a>
+</nav>
+</body></html>

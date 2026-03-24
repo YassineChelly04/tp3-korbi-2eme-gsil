@@ -1,0 +1,27 @@
+# Scanni App Icon
+
+To create a beautiful app icon with an orange/red gradient:
+
+1. **Icon Design**: Modern minimalist geometric shapes
+   - Background: Orange to red gradient (#FF6B35 to #FF3D00)
+   - Shape: Document/paper with rounded corners
+   - Style: Flat design with subtle shadows
+
+2. **Sizes Needed for Android**:
+   - mipmap-xxxhdpi: 192x192px
+   - mipmap-xxhdpi: 144x144px
+   - mipmap-xhdpi: 96x96px
+   - mipmap-hdpi: 72x72px
+   - mipmap-mdpi: 48x48px
+
+3. **Tool Recommendations**:
+   - Use https://icon.kitchen for quick generation
+   - Or use https://romannurik.github.io/AndroidAssetStudio/
+   - Or design in Figma/Canva and export
+
+4. **Quick Setup**:
+   - Install flutter_launcher_icons package
+   - Add configuration to pubspec.yaml
+   - Run flutter pub run flutter_launcher_icons
+
+Would you like me to set up flutter_launcher_icons for automatic icon generation?
